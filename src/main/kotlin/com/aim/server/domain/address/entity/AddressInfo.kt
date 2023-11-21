@@ -17,8 +17,13 @@ data class AddressInfo(
 
     @Column(name = "name")
     val name: String,
+
+    @Column(name = "floor")
     val floor: Int,
+
+    @Column(name = "department")
     val department: String,
+
     @Column(name = "is_computer", columnDefinition = "BOOLEAN")
     val isComputer: Boolean = true
 )

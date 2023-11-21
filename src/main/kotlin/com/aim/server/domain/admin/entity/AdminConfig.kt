@@ -1,7 +1,7 @@
 package com.aim.server.domain.admin.entity
 
+import com.aim.server.domain.admin.dto.AdminConfigData.Response
 import jakarta.persistence.*
-import org.jetbrains.annotations.NotNull
 
 @Entity
 @Table(name = "admin_config")
@@ -14,6 +14,12 @@ data class AdminConfig(
     val key: String,
 
     @Column(name = "value")
-    val value: String,
-)
+    var value: String,
+) {
+    fun toResponse() = Response(
+        id = id,
+        key = key,
+        value = value
+    )
+}
 
