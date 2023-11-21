@@ -16,6 +16,6 @@ $ docker network create postgre-pg-network
 ```
 
 ```shell
-# docker-compose.yml 파일이 있는 경로에서
+# docker-compose.yml 파일이 있는 경로에서 왜안대!
 $ docker compose up -d
 ```
