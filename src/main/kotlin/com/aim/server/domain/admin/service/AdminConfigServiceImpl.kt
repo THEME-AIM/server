@@ -33,7 +33,7 @@ class AdminConfigServiceImpl(
             Exception("admin_password is not found in admin_config table")
         }
 
-        log.debug { "username: ${signIn.username}, password: ${signIn.password} findUsername: $username, findPassword: $password" }
+        log.debug { "로그인 요청: username: ${signIn.username}, password: ${signIn.password} findUsername: $username, findPassword: $password" }
 
         if (username != signIn.username || !passwordEncoder.matches(signIn.password, password)) {
             log.error { "Invalid username or password" }

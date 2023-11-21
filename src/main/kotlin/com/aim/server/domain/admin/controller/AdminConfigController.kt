@@ -1,5 +1,6 @@
 package com.aim.server.domain.admin.controller
 
+import com.aim.server.core.annotation.IsAuthenticated
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.LOGIN_SESSION
 import com.aim.server.domain.admin.dto.AdminConfigData.*
 import com.aim.server.domain.admin.service.AdminConfigService
@@ -37,6 +38,24 @@ class AdminConfigController(
     }
 
     /**
+     * 관리자 로그아웃
+     */
+    @DeleteMapping(value = ["/sign-out"])
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    fun signOut(
+        request: HttpServletRequest
+    ) {
+        // session을 조회하여 로그인 되어있는지 확인
+        val session = request.session.getAttribute(LOGIN_SESSION)
+        if (session == null || !(session as Boolean)) {
+            throw Exception("Not logged in")
+        }
+
+        // 로그아웃 성공 시 세션에 로그인 정보 삭제
+        request.session.setAttribute(LOGIN_SESSION, false)
+    }
+
+    /**
      * 관리자 설정 조회
      * @return List<Response>: 관리자 설정 리스트
      */
@@ -55,6 +74,7 @@ class AdminConfigController(
     @PatchMapping(value = ["/config"])
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
+    @IsAuthenticated
     fun upsertAdminConfigs(
         @RequestBody datas: List<Request>
     ): List<Response> {
