@@ -14,6 +14,8 @@ data class AddressInfo(
 
     @Column(name = "mac_address", unique = true, nullable = true)
     val macAddress: String,
+
+    @Column(name = "name")
     val name: String,
     val floor: Int,
     val department: String,
