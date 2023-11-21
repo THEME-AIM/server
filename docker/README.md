@@ -6,6 +6,7 @@
 # 현재 떠있는 docker container 확인 가능
 $ docker ps
 ```
+
 ```shell
 $ docker volume create postgre-pg-vol
 ```
