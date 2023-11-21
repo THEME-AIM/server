@@ -1,0 +1,36 @@
+version: "3"
+services:
+  PostgreSQL:
+    container_name: postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "vvip"
+      POSTGRES_PASSWORD: "vvip123!"
+      TZ : 'Asia/Seoul'
+    # restart: always
+    networks:
+      - postgre-pg-network
+    volumes:
+      - postgre-pg-vol:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    ports:
+      - "8090:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "vvip@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD : "vvip123!"
+    # restart: always
+    networks:
+      - postgre-pg-network
+
+networks:
+  postgre-pg-network:
+    driver: bridge
+
+volumes:
+  postgre-pg-vol:
+
