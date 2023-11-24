@@ -40,6 +40,11 @@ class AddressController(
         return addressService.upsertAddressInfo(addressInfo)
     }
 
+    /**
+     * IP 정보 조회
+     * @param String: IP 주소
+     * @return Unit
+     */
     @PatchMapping(value = ["/{ipAddress}"])
     @ResponseStatus(value = HttpStatus.OK)
     fun updateIp(
@@ -49,6 +54,11 @@ class AddressController(
         return addressService.updateAddressInfo(addressInfo, ipAddress)
     }
 
+    /**
+     * IP 정보 삭제
+     * @param String: IP 주소
+     * @return Unit
+     */
     @DeleteMapping(value = ["/{ipAddress}"])
     @ResponseStatus(value = HttpStatus.OK)
     fun deleteIp(
