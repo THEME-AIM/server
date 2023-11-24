@@ -1,7 +1,7 @@
 version: "3"
 services:
   PostgreSQL:
-    container_name: postgres
+    container_name: postgres_vvip
     image: postgres
     ports:
       - "5432:5432"
@@ -11,12 +11,12 @@ services:
       TZ : 'Asia/Seoul'
     # restart: always
     networks:
-      - postgre-pg-network
+      - vvip-postgre-pg-network
     volumes:
-      - postgre-pg-vol:/var/lib/postgresql/data
+      - vvip-postgre-pg-vol:/var/lib/postgresql/data
 
   pgadmin:
-    container_name: pgadmin
+    container_name: pgadmin_vvip
     image: dpage/pgadmin4
     ports:
       - "8090:80"
@@ -25,12 +25,12 @@ services:
       PGADMIN_DEFAULT_PASSWORD : "vvip123!"
     # restart: always
     networks:
-      - postgre-pg-network
+      - vvip-postgre-pg-network
 
 networks:
-  postgre-pg-network:
+  vvip-postgre-pg-network:
     driver: bridge
 
 volumes:
-  postgre-pg-vol:
+  vvip-postgre-pg-vol:
 

@@ -1,5 +1,6 @@
 package com.aim.server.domain.address.entity
 
+import com.aim.server.domain.address.dto.AddressInfoData
 import jakarta.persistence.*
 
 @Entity
@@ -13,17 +14,18 @@ data class AddressInfo(
     var ipAddress: String,
 
     @Column(name = "mac_address", unique = true, nullable = true)
-    val macAddress: String,
+    var macAddress: String,
 
     @Column(name = "name")
-    val name: String,
+    var name: String,
 
     @Column(name = "floor")
-    val floor: Int,
+    var floor: Int,
 
     @Column(name = "department")
-    val department: String,
+    var department: String,
 
     @Column(name = "is_computer", columnDefinition = "BOOLEAN")
-    val isComputer: Boolean = true
-)
+    var isComputer: Boolean = true
+) {
+}
