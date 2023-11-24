@@ -11,6 +11,7 @@ import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.repository.AdminConfigRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.annotation.PostConstruct
+import jakarta.transaction.Transactional
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -72,15 +73,32 @@ class AdminConfigServiceImpl(
      */
     override fun getAdminConfigs(): List<Response> = adminConfigRepository.findAll().map { it.toResponse() }
 
+
+//    override fun upsertAdminConfigs(configs: List<Request>): List<Response> =
+//        adminConfigRepository.saveAll(configs.map {
+//            getOrCreateAdminConfig(it.key, it.value)
+//        }).map { it.toResponse() }
+
     /**
      * 관리자 설정 수정 혹은 추가
      * @param configs: List<ConfigData>: 수정 혹은 생성할 관리자 설정 리스트
      * @return List<ConfigData>: 수정 혹은 생성된 관리자 설정 리스트
      */
-    override fun upsertAdminConfigs(configs: List<Request>): List<Response> =
-        adminConfigRepository.saveAll(configs.map {
-            getOrCreateAdminConfig(it.key, it.value)
-        }).map { it.toResponse() }
+    @Transactional
+    override fun upsertAdminConfigs(configs: List<Request>): List<Response> {
+        val findConfigs = adminConfigRepository.findAdminConfigByKeys(configs.map { it.key })
+        return configs.map {
+            findConfigs.find { findConfig -> findConfig.key == it.key }?.let { config ->
+                config.value = it.value
+                config
+            } ?: adminConfigRepository.save(AdminConfig(key = it.key, value = convertValue(it.key, it.value)))
+        }.map { it.toResponse() }
+    }
+
+    private fun convertValue(key: String, value: String): String = when (key) {
+        ADMIN_PASSWORD_KEY -> passwordEncoder.encode(value)
+        else -> value
+    }
 
     /**
      * 관리자 설정 특정 키 조회
