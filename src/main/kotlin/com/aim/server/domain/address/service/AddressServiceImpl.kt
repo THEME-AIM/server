@@ -1,7 +1,6 @@
 package com.aim.server.domain.address.service
 
 import com.aim.server.domain.address.dto.AddressInfoData
-import com.aim.server.domain.address.entity.AddressInfo
 import com.aim.server.domain.address.repository.AddressInfoRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -9,11 +8,20 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class AddressServiceImpl(
     private val addressInfoRepository: AddressInfoRepository
-): AddressService {
+) : AddressService {
     override fun upsertAddressInfo(addressInfo: List<AddressInfoData>) {
-        addressInfoRepository.saveAll(addressInfo.map {
-            checkNeedToUpdate(it)
-        })
+        val matchedAddressInfo = addressInfoRepository.findByIpAddress(addressInfo.map { it.ipAddress })
+        addressInfo.map {
+            matchedAddressInfo.find { matchedAddressInfo ->
+                matchedAddressInfo.ipAddress == it.ipAddress
+            }?.let { matchedAddressInfo ->
+                matchedAddressInfo.macAddress = it.macAddress
+                matchedAddressInfo.department = it.department
+                matchedAddressInfo.floor = it.floor
+                matchedAddressInfo.name = it.name
+                matchedAddressInfo.isComputer = it.isComputer
+            } ?: addressInfoRepository.save(it.toEntity())
+        }
     }
 
     override fun insertAddressInfo(addressInfo: AddressInfoData) {
@@ -21,7 +29,7 @@ class AddressServiceImpl(
     }
 
     override fun updateAddressInfo(addressInfo: AddressInfoData, ipAddress: String) {
-        addressInfoRepository.save(addressInfoRepository.findByIpAddress(ipAddress).get().apply {
+        addressInfoRepository.save(addressInfoRepository.findByIpAddress(listOf(ipAddress))[0].apply {
             this.macAddress = addressInfo.macAddress
             this.department = addressInfo.department
             this.floor = addressInfo.floor
@@ -33,18 +41,5 @@ class AddressServiceImpl(
     @Transactional
     override fun deleteAddressInfo(ipAddress: String) {
         addressInfoRepository.deleteByIpAddress(ipAddress)
-    }
-
-    private fun checkNeedToUpdate(addressInfoData: AddressInfoData): AddressInfo{
-        return addressInfoRepository.findByIpAddress(addressInfoData.ipAddress).apply {
-            this.ifPresent{
-                it.ipAddress = addressInfoData.ipAddress
-                it.macAddress = addressInfoData.macAddress
-                it.department = addressInfoData.department
-                it.floor = addressInfoData.floor
-                it.name = addressInfoData.name
-                it.isComputer = addressInfoData.isComputer
-            }
-        }.orElse(addressInfoData.toEntity())
     }
 }
