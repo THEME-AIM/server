@@ -1,13 +1,16 @@
 package com.aim.server.domain.admin.service
 
-import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_PASSWORD
-import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_USERNAME
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_PASSWORD_KEY
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_USERNAME_KEY
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_PASSWORD_VALUE
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_USERNAME_VALUE
 import com.aim.server.domain.admin.dto.AdminConfigData
 import com.aim.server.domain.admin.dto.AdminConfigData.Request
 import com.aim.server.domain.admin.dto.AdminConfigData.Response
 import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.repository.AdminConfigRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
+import jakarta.annotation.PostConstruct
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -20,15 +23,37 @@ class AdminConfigServiceImpl(
     private val log = KotlinLogging.logger { }
 
     /**
+     * 서버 생성 시 자동으로 관리자 계정을 생성함. 계정 ID, Password는 admin으로 설정됨.
+     */
+    @PostConstruct
+    private fun createDefaultAdminUser() {
+        val username = adminConfigRepository.findValueByKey(ADMIN_USERNAME_KEY)
+        val password = adminConfigRepository.findValueByKey(ADMIN_PASSWORD_KEY)
+
+        if (username.isEmpty || password.isEmpty) {
+            val adminUsername = AdminConfig(
+                key = ADMIN_USERNAME_KEY,
+                value = DEFAULT_ADMIN_USERNAME_VALUE
+            )
+            val adminPassword = AdminConfig(
+                key = ADMIN_PASSWORD_KEY,
+                value = passwordEncoder.encode(DEFAULT_ADMIN_PASSWORD_VALUE)
+            )
+            adminConfigRepository.save(adminUsername)
+            adminConfigRepository.save(adminPassword)
+        }
+    }
+
+    /**
      * 관리자 로그인 정보를 바탕으로 로그인을 진행함. 예외 발생 시 로그인 실패
      * @param signIn: SignInRequest: 관리자 로그인 정보 (ID / Password)
      */
     override fun signIn(signIn: AdminConfigData.SignInRequest) {
-        val username = adminConfigRepository.findValueByKey(ADMIN_USERNAME).orElseThrow {
+        val username = adminConfigRepository.findValueByKey(ADMIN_USERNAME_KEY).orElseThrow {
             log.error { "admin_username is not found in admin_config table" }
             Exception("admin_username is not found in admin_config table")
         }
-        val password = adminConfigRepository.findValueByKey(ADMIN_PASSWORD).orElseThrow {
+        val password = adminConfigRepository.findValueByKey(ADMIN_PASSWORD_KEY).orElseThrow {
             log.error { "admin_password is not found in admin_config table" }
             Exception("admin_password is not found in admin_config table")
         }
@@ -76,7 +101,7 @@ class AdminConfigServiceImpl(
     private fun getOrCreateAdminConfig(key: String, value: String): AdminConfig {
         // 특정한 키 값인 경우 값 변환 하여 저장 (비밀번호)
         var newValue = value
-        if (key == ADMIN_PASSWORD) {
+        if (key == ADMIN_PASSWORD_KEY) {
             newValue = passwordEncoder.encode(value)
         }
         log.debug { "키 값 변경 혹은 생성: $key = $newValue" }

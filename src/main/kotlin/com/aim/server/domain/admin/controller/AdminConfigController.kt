@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*
 class AdminConfigController(
     private val adminConfigService: AdminConfigService
 ) {
-
     /**
      * 관리자 로그인
      * @param signIn: SignInRequest: 관리자 로그인 정보 (ID / Password)
