@@ -8,14 +8,13 @@ import java.util.*
 class AddressInfoQueryRepositoryImpl(
     private val queryFactory: JPAQueryFactory
 ) : AddressInfoQueryRepository {
-    override fun findByIpAddress(ipAddress: String): Optional<AddressInfo> {
-        return Optional.ofNullable(
-            queryFactory
-                .select(addressInfo)
-                .from(addressInfo)
-                .where(addressInfo.ipAddress.eq(ipAddress))
-                .fetchOne()
-        )
+    override fun findByIpAddress(ipAddress: List<String>): List<AddressInfo> {
+        return queryFactory
+            .select(addressInfo)
+            .from(addressInfo)
+            .where(addressInfo.ipAddress.`in`(ipAddress))
+            .fetch()
+
     }
 
     override fun deleteByIpAddress(ipAddress: String) {
