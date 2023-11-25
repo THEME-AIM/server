@@ -1,19 +1,30 @@
 package com.aim.server.domain.address.entity
 
-import com.aim.server.domain.address.dto.AddressInfoData
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "address_info")
+@Table(
+    name = "address_info",
+    uniqueConstraints = [
+        UniqueConstraint(
+            name = "ip_address_unique_constraint",
+            columnNames = ["ip_address"]
+        ),
+        UniqueConstraint(
+            name = "mac_address_unique_constraint",
+            columnNames = ["mac_address"]
+        ),
+    ]
+)
 data class AddressInfo(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    @Column(name = "ip_address", unique = true)
+    @Column(name = "ip_address")
     var ipAddress: String,
 
-    @Column(name = "mac_address", unique = true, nullable = true)
+    @Column(name = "mac_address", nullable = true)
     var macAddress: String,
 
     @Column(name = "name")

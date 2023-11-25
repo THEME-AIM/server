@@ -4,13 +4,21 @@ import com.aim.server.domain.admin.dto.AdminConfigData.Response
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "admin_config")
+@Table(
+    name = "admin_config",
+    uniqueConstraints = [
+        UniqueConstraint(
+            name = "key_unique_constraint",
+            columnNames = ["key"]
+        )
+    ]
+)
 data class AdminConfig(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    @Column(name = "key", unique = true)
+    @Column(name = "key")
     val key: String,
 
     @Column(name = "value")

@@ -73,12 +73,6 @@ class AdminConfigServiceImpl(
      */
     override fun getAdminConfigs(): List<Response> = adminConfigRepository.findAll().map { it.toResponse() }
 
-
-//    override fun upsertAdminConfigs(configs: List<Request>): List<Response> =
-//        adminConfigRepository.saveAll(configs.map {
-//            getOrCreateAdminConfig(it.key, it.value)
-//        }).map { it.toResponse() }
-
     /**
      * 관리자 설정 수정 혹은 추가
      * @param configs: List<ConfigData>: 수정 혹은 생성할 관리자 설정 리스트
@@ -86,10 +80,10 @@ class AdminConfigServiceImpl(
      */
     @Transactional
     override fun upsertAdminConfigs(configs: List<Request>): List<Response> = configs.run {
-        val findConfigs = adminConfigRepository.findAdminConfigByKeys(this.map { it.key })
+        val findConfigs = adminConfigRepository.findByKeyIn(this.map(Request::key))
         return this.map {
             findConfigs.find { findConfig -> findConfig.key == it.key }?.apply {
-                this.value = it.value
+                this.value = convertValue(it.key, it.value)
             } ?: adminConfigRepository.save(AdminConfig(key = it.key, value = convertValue(it.key, it.value)))
         }.map { it.toResponse() }
     }

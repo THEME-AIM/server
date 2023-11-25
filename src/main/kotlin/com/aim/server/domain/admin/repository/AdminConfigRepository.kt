@@ -7,6 +7,6 @@ import java.util.*
 
 @Service
 interface AdminConfigRepository : JpaRepository<AdminConfig, Long>, AdminConfigQueryRepository {
-
     fun findByKey(key: String): Optional<AdminConfig>
+    fun findByKeyIn(keys: List<String>): List<AdminConfig>
 }
