@@ -27,16 +27,19 @@ data class AddressInfo(
     @Column(name = "mac_address", nullable = true)
     var macAddress: String,
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = true)
     var name: String,
 
-    @Column(name = "floor")
+    @Column(name = "floor", nullable = true)
     var floor: Int,
 
-    @Column(name = "department")
+    @Column(name = "department", nullable = true)
     var department: String,
 
     @Column(name = "is_computer", columnDefinition = "BOOLEAN")
-    var isComputer: Boolean = true
+    var isComputer: Boolean = true,
+
+    @Column(name = "is_using", columnDefinition = "BOOLEAN")
+    var isUsing: Boolean = false
 ) {
 }
