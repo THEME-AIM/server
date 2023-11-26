@@ -1,6 +1,8 @@
 package com.aim.server.domain.address.service
 
 import com.aim.server.domain.address.dto.AddressInfoData
+import com.aim.server.domain.address.dto.AddressInfoResponse
+import com.aim.server.domain.address.entity.AddressInfo
 import com.aim.server.domain.address.repository.AddressInfoRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -42,4 +44,37 @@ class AddressServiceImpl(
     override fun deleteAddressInfo(ipAddress: String) {
         addressInfoRepository.deleteByIpAddress(ipAddress)
     }
+
+
+    override fun getAddressInfo(type: String) : List<AddressInfoResponse>{
+       if(type == "floor"){
+            val floorList:List<Int> = addressInfoRepository.getFloorList()
+            val allAddressList : List<AddressInfoData> = addressInfoRepository.findAll().map {
+                it.toDto()
+            }
+           var a: AddressInfoResponse
+           val returnAddressList : List<AddressInfoResponse>
+            for(i in floorList){
+                var thisTurn : AddressInfoResponse? = null
+                thisTurn?.key = i.toString()
+                for (tmp in allAddressList){
+                    if( i == tmp.floor){
+                        thisTurn?.addressList
+                    }
+                }
+
+            }
+
+       }
+       else if(type == "dept"){
+           val deptList:List<String> = addressInfoRepository.getDeptList()
+
+       }
+       else {
+
+       }
+
+    }
+
+
 }

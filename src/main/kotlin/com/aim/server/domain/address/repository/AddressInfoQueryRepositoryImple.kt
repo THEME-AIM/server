@@ -23,4 +23,20 @@ class AddressInfoQueryRepositoryImpl(
             .where(addressInfo.ipAddress.eq(ipAddress))
             .execute()
     }
+
+    override fun getFloorList(): List<Int> {
+        return queryFactory
+            .select(addressInfo.floor)
+            .from(addressInfo)
+            .fetch()
+    }
+
+    override fun getDeptList(): List<String> {
+        return queryFactory
+            .select(addressInfo.department)
+            .from(addressInfo)
+            .fetch()
+    }
+
+
 }

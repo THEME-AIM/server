@@ -6,4 +6,6 @@ import java.util.*
 interface AddressInfoQueryRepository {
     fun findByIpAddress(ipAddress: List<String>): List<AddressInfo>
     fun deleteByIpAddress(ipAddress: String)
+    fun getFloorList(): List<Int>
+    fun getDeptList() : List<String>
 }

@@ -2,6 +2,7 @@ package com.aim.server.domain.address.controller
 
 import com.aim.server.core.annotation.IsAuthenticated
 import com.aim.server.domain.address.dto.AddressInfoData
+import com.aim.server.domain.address.dto.AddressInfoResponse
 import com.aim.server.domain.address.service.AddressService
 import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus
@@ -66,4 +67,29 @@ class AddressController(
     ) {
         return addressService.deleteAddressInfo(ipAddress)
     }
+
+    /**
+     * IP 정보 확인
+     * @param String: IP 주소
+     * @return Unit
+     */
+    @GetMapping(value=["/api/address"])
+    @ResponseStatus(value = HttpStatus.OK)
+    fun getIpList(
+        @RequestParam type : String,
+    ) : List<AddressInfoResponse>{
+        return addressService.getAddressInfo(type)
+    }
+
+    /**
+     * 잔여 IP 확인
+     * @param String: IP 주소
+     * @return Unit
+     */
+
+    /**
+     * 개인 IP 검색
+     * @param String: IP 주소
+     * @return Unit
+     */
 }
