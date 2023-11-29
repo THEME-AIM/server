@@ -21,4 +21,23 @@ data class AddressInfoData(
         )
     }
 
+    private fun AddressInfo(
+        ipAddress: String,
+        macAddress: String,
+        name: String,
+        floor: Int,
+        department: String,
+        isComputer: Boolean
+    ): AddressInfo {
+        return AddressInfo(
+            ipAddress = ipAddress,
+            macAddress = macAddress,
+            name = name,
+            floor = floor,
+            department = department,
+            isComputer = isComputer
+        )
+    }
+
+
 }
