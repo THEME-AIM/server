@@ -61,7 +61,7 @@ class AdminConfigController(
     @GetMapping(value = ["/config"])
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
-    fun getAdminConfigs(): List<Response> {
+    fun getAdminConfigs(): List<APIResponse> {
         return adminConfigService.getAdminConfigs()
     }
 
@@ -75,8 +75,8 @@ class AdminConfigController(
     @ResponseStatus(value = HttpStatus.OK)
     @IsAuthenticated
     fun upsertAdminConfigs(
-        @RequestBody datas: List<Request>
-    ): List<Response> {
+        @RequestBody datas: List<APIRequest>
+    ): List<APIResponse> {
         return adminConfigService.upsertAdminConfigs(datas)
     }
 }
