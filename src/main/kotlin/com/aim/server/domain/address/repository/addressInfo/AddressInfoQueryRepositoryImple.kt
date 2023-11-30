@@ -1,9 +1,8 @@
-package com.aim.server.domain.address.repository
+package com.aim.server.domain.address.repository.addressInfo
 
 import com.aim.server.domain.address.entity.AddressInfo
 import com.aim.server.domain.address.entity.QAddressInfo.addressInfo
 import com.querydsl.jpa.impl.JPAQueryFactory
-import java.util.*
 
 class AddressInfoQueryRepositoryImpl(
     private val queryFactory: JPAQueryFactory

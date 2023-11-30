@@ -1,4 +1,4 @@
-package com.aim.server.domain.address.repository
+package com.aim.server.domain.address.repository.addressInfo
 
 import com.aim.server.domain.address.entity.AddressInfo
 import java.util.*

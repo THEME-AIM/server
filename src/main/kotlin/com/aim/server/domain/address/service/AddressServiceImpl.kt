@@ -1,9 +1,9 @@
 package com.aim.server.domain.address.service
 
 import com.aim.server.domain.address.dto.AddressInfoData
+import com.aim.server.domain.address.repository.addressInfo.AddressInfoRepository
 import com.aim.server.domain.address.dto.AddressInfoResponse
 import com.aim.server.domain.address.entity.AddressInfo
-import com.aim.server.domain.address.repository.AddressInfoRepository
 import com.aim.server.domain.admin.repository.AdminConfigRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

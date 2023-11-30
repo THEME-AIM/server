@@ -23,7 +23,11 @@ data class AddressInfo(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    @Column(name = "ip_address")
+    @OneToOne
+    @JoinColumn(name = "address_management_id")
+    var addressManagement: AddressManagement,
+
+    @Column(name = "ip_address", nullable = true)
     var ipAddress: String,
 
     @Column(name = "mac_address", nullable = true)
@@ -40,9 +44,6 @@ data class AddressInfo(
 
     @Column(name = "is_computer", columnDefinition = "BOOLEAN")
     var isComputer: Boolean = true,
-
-    @Column(name = "is_using", columnDefinition = "BOOLEAN")
-    var isUsing: Boolean = false
 ) {
     fun toDto(): AddressInfoData {
         return AddressInfoData(
