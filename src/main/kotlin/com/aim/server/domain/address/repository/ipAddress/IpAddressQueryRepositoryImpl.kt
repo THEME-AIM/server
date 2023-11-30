@@ -10,10 +10,10 @@ class IpAddressQueryRepositoryImpl(
     private val queryFactory: JPAQueryFactory
 ) : IpAddressQueryRepository {
 
-    override fun updateIpAddress(value: String) {
+    override fun updateIpAddress(value: String, isUsed: Boolean) {
         queryFactory
             .update(ipAddress)
-            .set(ipAddress.isAssigned, true)
+            .set(ipAddress.isAssigned, isUsed)
             .where(ipAddress.ipAddress.eq(value))
             .execute()
     }
