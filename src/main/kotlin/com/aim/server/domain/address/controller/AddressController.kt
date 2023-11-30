@@ -69,11 +69,11 @@ class AddressController(
     }
 
     /**
-     * IP 정보 확인
+     * IP 리스트 확인
      * @param String: IP 주소
      * @return Unit
      */
-    @GetMapping(value=["/api/address"])
+    @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
     fun getIpList(
         @RequestParam type : String,
@@ -86,10 +86,24 @@ class AddressController(
      * @param String: IP 주소
      * @return Unit
      */
+    @GetMapping(value = ["/remained"])
+    @ResponseStatus(value= HttpStatus.OK)
+    fun getRemainedIp() : List<AddressInfoData>{
+        return addressService.getRemainedAddress()
+    }
 
     /**
      * 개인 IP 검색
      * @param String: IP 주소
      * @return Unit
      */
+    // /api/addrress/search?keyword={키워드}&value={값}
+    @GetMapping(value = ["/search"])
+    @ResponseStatus(value = HttpStatus.OK)
+    fun searchIp(
+        @RequestParam keyword : String,
+        @RequestParam  value : String
+    ) : List<AddressInfoData>{
+        return addressService.searchAddressInfo(keyword,value)
+    }
 }

@@ -4,12 +4,14 @@ import com.aim.server.domain.address.dto.AddressInfoData
 import com.aim.server.domain.address.dto.AddressInfoResponse
 import com.aim.server.domain.address.entity.AddressInfo
 import com.aim.server.domain.address.repository.AddressInfoRepository
+import com.aim.server.domain.admin.repository.AdminConfigRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AddressServiceImpl(
-    private val addressInfoRepository: AddressInfoRepository
+    private val addressInfoRepository: AddressInfoRepository,
+    private val adminConfigRepository: AdminConfigRepository
 ) : AddressService {
     override fun upsertAddressInfo(addressInfo: List<AddressInfoData>) {
         val matchedAddressInfo = addressInfoRepository.findByIpAddress(addressInfo.map { it.ipAddress })
@@ -46,33 +48,70 @@ class AddressServiceImpl(
     }
 
 
-    override fun getAddressInfo(type: String) : List<AddressInfoResponse>{
-       if(type == "floor"){
-            val floorList:List<Int> = addressInfoRepository.getFloorList()
-            val allAddressList : List<AddressInfoData> = addressInfoRepository.findAll().map {
-                it.toDto()
-            }
-           var a: AddressInfoResponse
-           val returnAddressList : List<AddressInfoResponse>
-            for(i in floorList){
-                var thisTurn : AddressInfoResponse? = null
-                thisTurn?.key = i.toString()
-                for (tmp in allAddressList){
-                    if( i == tmp.floor){
-                        thisTurn?.addressList
+    override fun getAddressInfo(type: String): List<AddressInfoResponse> {
+        val allAddressList: List<AddressInfoData> = addressInfoRepository.findAll().map {
+            it.toDto()
+        }
+        val returnAddressList: MutableList<AddressInfoResponse> = mutableListOf()
+        if (type == "floor") {
+            val floorList: List<Int> = addressInfoRepository.getFloorList()
+            for (i in floorList) {
+                var thisTurn = AddressInfoResponse(i.toString(), mutableListOf())
+                for (tmp in allAddressList) {
+                    if (i == tmp.floor) {
+                        thisTurn.addressList.add(tmp)
                     }
                 }
+                returnAddressList.add(thisTurn)
 
             }
 
-       }
-       else if(type == "dept"){
-           val deptList:List<String> = addressInfoRepository.getDeptList()
+        } else if (type == "dept") {
+            val deptList: List<String> = addressInfoRepository.getDeptList()
+            for (i in deptList) {
+                var thisTurn = AddressInfoResponse(i.toString(), mutableListOf())
+                for (tmp in allAddressList) {
+                    if (i == tmp.department) {
+                        thisTurn.addressList.add(tmp)
+                    }
+                }
+                returnAddressList.add(thisTurn)
+            }
 
-       }
-       else {
+        }
+        return returnAddressList
 
-       }
+    }
+
+    override fun searchAddressInfo(keyword: String, value: String): List<AddressInfoData> {
+        var returnAddressList : List<AddressInfoData> = mutableListOf()
+        if(keyword == "ip"){
+            returnAddressList = addressInfoRepository.findAllByIpAddress(value).map { it.toDto() }
+        }
+        else if(keyword == "mac"){
+            returnAddressList = addressInfoRepository.findAllByMac(value).map { it.toDto() }
+        }
+        else if(keyword == "name"){
+            returnAddressList = addressInfoRepository.findAllByName(value).map { it.toDto() }
+        }
+        return returnAddressList
+    }
+
+    override fun getRemainedAddress(): List<AddressInfoData> {
+        val firstIp = adminConfigRepository.findValueByKey("start_ip_address").get().split(".")[3].toInt()
+        val endIp = adminConfigRepository.findValueByKey("end_ip_address").get().split(".")[3].toInt()
+        val frontIp = adminConfigRepository.findValueByKey("start_ip_address").get().substringBeforeLast('.')
+        val allAddressList: List<AddressInfoData> = addressInfoRepository.findAll().map {
+            it.toDto()
+        }
+        val firstToEndList = (firstIp..endIp).toMutableList()
+        for(i in firstToEndList){
+            var thisTurn = "$frontIp.$i"
+            if(addressInfoRepository.findAllByIpAddress(thisTurn).isEmpty()) continue
+            else firstToEndList.remove(i)
+        }
+
+        return allAddressList
 
     }
 

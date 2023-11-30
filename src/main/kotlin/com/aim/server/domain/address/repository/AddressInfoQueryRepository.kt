@@ -8,4 +8,7 @@ interface AddressInfoQueryRepository {
     fun deleteByIpAddress(ipAddress: String)
     fun getFloorList(): List<Int>
     fun getDeptList() : List<String>
+    fun findAllByIpAddress(ipAddress: String) : List<AddressInfo>
+    fun findAllByName(name : String) : List<AddressInfo>
+    fun findAllByMac(mac : String) : List<AddressInfo>
 }

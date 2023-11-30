@@ -10,4 +10,7 @@ interface AddressService {
     fun updateAddressInfo(addressInfo: AddressInfoData, ipAddress: String)
     fun deleteAddressInfo(ipAddress: String)
     fun getAddressInfo(type : String) :List<AddressInfoResponse>
+    fun searchAddressInfo(keyword : String, value : String) : List<AddressInfoData>
+
+    fun getRemainedAddress() : List<AddressInfoData>
 }

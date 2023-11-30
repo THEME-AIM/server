@@ -73,7 +73,7 @@ class AdminConfigController(
     @PatchMapping(value = ["/config"])
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
-    @IsAuthenticated
+//    @IsAuthenticated
     fun upsertAdminConfigs(
         @RequestBody datas: List<Request>
     ): List<Response> {
