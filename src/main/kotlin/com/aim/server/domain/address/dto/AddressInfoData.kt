@@ -1,6 +1,7 @@
 package com.aim.server.domain.address.dto
 
 import com.aim.server.domain.address.entity.AddressInfo
+import com.aim.server.domain.address.entity.IpAddress
 
 data class AddressInfoData(
     val ipAddress: String,
@@ -10,34 +11,13 @@ data class AddressInfoData(
     val department: String,
     val isComputer: Boolean = true
 ) {
-    fun toEntity(): AddressInfo {
+    fun toEntity(ipAddress: IpAddress): AddressInfo {
         return AddressInfo(
             ipAddress = ipAddress,
             macAddress = macAddress,
             name = name,
-            floor = floor,
             department = department,
             isComputer = isComputer
         )
     }
-
-    private fun AddressInfo(
-        ipAddress: String,
-        macAddress: String,
-        name: String,
-        floor: Int,
-        department: String,
-        isComputer: Boolean
-    ): AddressInfo {
-        return AddressInfo(
-            ipAddress = ipAddress,
-            macAddress = macAddress,
-            name = name,
-            floor = floor,
-            department = department,
-            isComputer = isComputer
-        )
-    }
-
-
 }

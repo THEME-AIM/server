@@ -4,15 +4,15 @@ import jakarta.persistence.*
 
 @Entity
 @Table(
-    name = "address_management",
+    name = "ip_address",
     uniqueConstraints = [
         UniqueConstraint(
-            name = "ip_address_management_unique_constraint",
+            name = "ip_address_unique_constraint",
             columnNames = ["ip_address"]
         )
     ]
 )
-data class AddressManagement(
+data class IpAddress(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
@@ -26,7 +26,5 @@ data class AddressManagement(
     @Column(name = "is_assigned", columnDefinition = "BOOLEAN")
     var isAssigned: Boolean = false,
 
-    @Column(name = "subnet_mask")
-    var subnetMask: Int,
-) {
+    ) {
 }

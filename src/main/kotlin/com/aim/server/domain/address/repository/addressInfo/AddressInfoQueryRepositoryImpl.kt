@@ -11,7 +11,7 @@ class AddressInfoQueryRepositoryImpl(
         return queryFactory
             .select(addressInfo)
             .from(addressInfo)
-            .where(addressInfo.ipAddress.`in`(ipAddress))
+            .where(addressInfo.ipAddress.ipAddress.`in`(ipAddress))
             .fetch()
 
     }
@@ -19,7 +19,7 @@ class AddressInfoQueryRepositoryImpl(
     override fun deleteByIpAddress(ipAddress: String) {
         queryFactory
             .delete(addressInfo)
-            .where(addressInfo.ipAddress.eq(ipAddress))
+            .where(addressInfo.ipAddress.ipAddress.eq(ipAddress))
             .execute()
     }
 }
