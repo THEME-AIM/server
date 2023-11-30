@@ -1,0 +1,29 @@
+package com.aim.server.domain.address.repository.ipAddress
+
+import com.aim.server.domain.address.entity.IpAddress
+import com.aim.server.domain.address.entity.QIpAddress.ipAddress1 as ipAddress
+import com.querydsl.jpa.impl.JPAQueryFactory
+import java.util.Optional
+
+
+class IpAddressQueryRepositoryImpl(
+    private val queryFactory: JPAQueryFactory
+) : IpAddressQueryRepository {
+
+    override fun updateIpAddress(value: String) {
+        queryFactory
+            .update(ipAddress)
+            .set(ipAddress.isAssigned, true)
+            .where(ipAddress.ipAddress.eq(value))
+            .execute()
+    }
+
+    override fun findByIpAddress(value: String): Optional<IpAddress> {
+        return Optional.ofNullable(
+            queryFactory
+                .selectFrom(ipAddress)
+                .where(ipAddress.ipAddress.eq(value))
+                .fetchOne()
+        )
+    }
+}

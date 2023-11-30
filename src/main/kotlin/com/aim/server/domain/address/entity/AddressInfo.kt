@@ -9,10 +9,6 @@ import jakarta.persistence.*
     name = "address_info",
     uniqueConstraints = [
         UniqueConstraint(
-            name = "ip_address_unique_constraint",
-            columnNames = ["ip_address"]
-        ),
-        UniqueConstraint(
             name = "mac_address_unique_constraint",
             columnNames = ["mac_address"]
         ),
@@ -24,20 +20,14 @@ data class AddressInfo(
     val id: Long = 0L,
 
     @OneToOne
-    @JoinColumn(name = "address_management_id")
-    var addressManagement: AddressManagement,
-
-    @Column(name = "ip_address", nullable = true)
-    var ipAddress: String,
+    @JoinColumn(name = "ip_address", referencedColumnName = "ip_address")
+    var ipAddress: IpAddress,
 
     @Column(name = "mac_address", nullable = true)
     var macAddress: String,
 
     @Column(name = "name", nullable = true)
     var name: String,
-
-    @Column(name = "floor", nullable = true)
-    var floor: Int,
 
     @Column(name = "department", nullable = true)
     var department: String,
@@ -47,10 +37,10 @@ data class AddressInfo(
 ) {
     fun toDto(): AddressInfoData {
         return AddressInfoData(
-            ipAddress = ipAddress,
+            ipAddress = ipAddress.ipAddress,
+            floor = ipAddress.floor,
             macAddress = macAddress,
             name = name,
-            floor = floor,
             department = department,
             isComputer = isComputer
         )
