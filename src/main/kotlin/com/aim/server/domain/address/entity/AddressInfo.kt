@@ -17,7 +17,7 @@ data class AddressInfo(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ip_address", referencedColumnName = "ip_address")
     var ipAddress: IpAddress,
 
