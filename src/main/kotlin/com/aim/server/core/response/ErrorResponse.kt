@@ -8,10 +8,12 @@ data class ErrorResponse(
     val code: Int,
     val message: String,
     val errors: Any? = null
-) : BaseResponse(
+) : BaseResponse<Unit>(
     isSuccess = isSuccess,
     code = code,
     message = message,
+    data = null,
+    errors = errors,
 ) {
     constructor(errorCode: ErrorCode) : this(code = errorCode.httpStatus.value(), message = errorCode.errorMessage)
     constructor(errorCode: ErrorCode, message: String) : this(code = errorCode.httpStatus.value(), message = message)

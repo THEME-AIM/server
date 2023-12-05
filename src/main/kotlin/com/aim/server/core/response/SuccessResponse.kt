@@ -7,10 +7,12 @@ data class SuccessResponse<T>(
     val code: Int,
     val message: String,
     val data: T,
-) : BaseResponse(
+) : BaseResponse<T>(
     isSuccess = isSuccess,
     code = code,
     message = message,
+    data = data,
+    errors = null,
 ) {
     constructor(code: Int, message: String, data: T) : this(true, code, message, data)
     constructor(message: String, data: T) : this(true, HttpStatus.OK.value(), message, data)

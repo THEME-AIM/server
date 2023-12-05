@@ -3,6 +3,7 @@ package com.aim.server.domain.admin.controller
 import com.aim.server.core.annotation.IsAuthenticated
 import com.aim.server.core.exception.BaseException
 import com.aim.server.core.exception.ErrorCode
+import com.aim.server.core.response.BaseResponse
 import com.aim.server.core.response.SuccessResponse
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.LOGIN_SESSION
 import com.aim.server.domain.admin.dto.AdminConfigData.*
@@ -67,7 +68,7 @@ class AdminConfigController(
     @GetMapping(value = ["/config"])
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
-    fun getAdminConfigs(): SuccessResponse<List<APIResponse>> {
+    fun getAdminConfigs(): BaseResponse<List<APIResponse>> {
         return SuccessResponse.of(adminConfigService.getAdminConfigs())
     }
 
@@ -82,7 +83,7 @@ class AdminConfigController(
     @IsAuthenticated
     fun upsertAdminConfigs(
         @RequestBody data: List<APIRequest>
-    ): SuccessResponse<List<APIResponse>> {
+    ): BaseResponse<List<APIResponse>> {
         return SuccessResponse.of(adminConfigService.upsertAdminConfigs(data))
     }
 }
