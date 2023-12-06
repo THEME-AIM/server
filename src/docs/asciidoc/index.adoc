@@ -1,0 +1,16 @@
+= AIM REST API 문서
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+[[Auth]]
+== 인증 API
+
+[[Auth-Login]]
+== 로그인
+
+include::{snippets}/admin/sign-in/http-request.adoc[]
+include::{snippets}/admin/sign-in/http-response.adoc[]
+
+[[Auth-Logout]]

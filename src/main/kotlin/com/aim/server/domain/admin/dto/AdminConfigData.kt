@@ -67,7 +67,10 @@ class AdminConfigData {
     }
 
     data class SignInRequest(
+        @field: NotBlank
         val username: String,
+        
+        @field: NotBlank
         val password: String
     )
 }

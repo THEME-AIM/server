@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "3.1.5"
     id("io.spring.dependency-management") version "1.1.3"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
@@ -19,6 +20,8 @@ java {
 repositories {
     mavenCentral()
 }
+
+
 
 allOpen {
     annotation("jakarta.persistence.Entity")
@@ -58,6 +61,10 @@ dependencies {
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+
+    // Spring Rest Docs
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
 tasks.withType<KotlinCompile> {
@@ -73,4 +80,52 @@ tasks.withType<Test> {
 
 tasks.bootBuildImage {
     builder.set("paketobuildpacks/builder-jammy-base:latest")
+}
+
+// Rest Docs Setting
+
+tasks {
+    val snippetsDir = file("build/generated-snippets")
+    
+    test {
+        outputs.dir(snippetsDir)
+        useJUnitPlatform()
+    }
+
+    build {
+        dependsOn("copyDocument")
+    }
+
+    asciidoctor {
+        inputs.dir(snippetsDir)
+
+        forkOptions {
+            jvmArgs("--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED")
+        }
+
+        dependsOn(test)
+
+        doFirst {
+            delete("src/main/resources/static/docs")
+        }
+    }
+
+    register<Copy>("copyDocument") {
+        dependsOn(asciidoctor)
+
+        destinationDir = file("src/main/resources/static")
+
+        delete("src/main/resources/static/docs")
+        from("build/docs/asciidoc") {
+            this.into("docs")
+        }
+    }
+
+    bootJar {
+        dependsOn(asciidoctor)
+
+        from("build/docs/asciidoc") {
+            into("BOOT-INF/classes/static/docs")
+        }
+    }
 }

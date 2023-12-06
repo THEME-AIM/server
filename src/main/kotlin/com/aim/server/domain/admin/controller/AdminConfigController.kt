@@ -41,6 +41,7 @@ class AdminConfigController(
         // 로그인 정보를 통해 관리자 로그인
         adminConfigService.signIn(signIn)
 
+
         // 로그인 성공 시 세션에 로그인 정보 저장
         request.session.setAttribute(LOGIN_SESSION, true)
 
