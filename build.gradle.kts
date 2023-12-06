@@ -86,7 +86,7 @@ tasks.bootBuildImage {
 
 tasks {
     val snippetsDir = file("build/generated-snippets")
-    
+
     test {
         outputs.dir(snippetsDir)
         useJUnitPlatform()
@@ -115,7 +115,6 @@ tasks {
 
         destinationDir = file("src/main/resources/static")
 
-        delete("src/main/resources/static/docs")
         from("build/docs/asciidoc") {
             this.into("docs")
         }

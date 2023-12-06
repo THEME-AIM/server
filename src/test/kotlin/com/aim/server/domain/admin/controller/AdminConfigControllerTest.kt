@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post
+import org.springframework.restdocs.operation.preprocess.Preprocessors.*
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.*
 import org.springframework.test.web.servlet.MockMvc
@@ -73,6 +74,8 @@ class AdminConfigControllerTest {
         }.andDo(
             document(
                 "admin/sign-in",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
                 requestFields(
                     fieldWithPath("username").type(JsonFieldType.STRING).description("관리자 아이디"),
                     fieldWithPath("password").type(JsonFieldType.STRING).description("관리자 비밀번호")
