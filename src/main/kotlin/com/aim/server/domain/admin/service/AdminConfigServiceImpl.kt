@@ -93,6 +93,11 @@ class AdminConfigServiceImpl(
         }.map { it.toResponse() }
     }
 
+    /**
+     * 층별 IP Address 설정 및 IpAddress Entity 데이터 생성, 수정 및 삭제
+     * @param configs: List<FloorConfigData>: 층별 IP Address 설정 리스트
+     * @return List<ConfigData>: 수정 혹은 생성된 관리자 설정 리스트
+     */
     @Transactional
     override fun upsertFloorConfigs(configs: List<FloorKeys>): List<APIResponse> {
         // IP Address 전체 조회
@@ -126,6 +131,9 @@ class AdminConfigServiceImpl(
         return upsertAdminConfigs(configs.toAdminKeys())
     }
 
+    /**
+     * 층별 IPAddress 설정 리스트를 관리자 설정 리스트로 변환
+     */
     private fun List<FloorKeys>.toAdminKeys(): List<AdminKeys> {
         val adminKeys = mutableListOf<AdminKeys>()
         this.forEach {
@@ -135,6 +143,12 @@ class AdminConfigServiceImpl(
         return adminKeys
     }
 
+    /**
+     * 관리자 설정 값 로직에 알맞게 변환
+     * @param key: String: 관리자 설정 키
+     * @param value: String: 관리자 설정 값
+     * @return String: 변환된 관리자 설정 값
+     */
     private fun convertValue(key: String, value: String): String = when (key) {
         ADMIN_PASSWORD_KEY -> passwordEncoder.encode(value)
         else -> value

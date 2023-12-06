@@ -9,6 +9,10 @@ import org.springframework.transaction.annotation.Transactional
 class IpAddressBatchRepository(
     private val jdbcTemplate: JdbcTemplate
 ) {
+    /**
+     * IP 주소를 batch로 insert함.
+     * @param ipAddressList: List<IpAddressWithFloor>: IP 주소와 층 정보를 담은 리스트
+     */
     @Transactional
     fun batchInsert(ipAddressList: List<IpAddressWithFloor>) {
         val query =

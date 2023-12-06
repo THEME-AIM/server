@@ -42,6 +42,10 @@ class IpAddressQueryRepositoryImpl(
             .fetch()
     }
 
+    /**
+     * 입력받은 IP 주소 리스트의 층 정보를 업데이트
+     * @param floor: Int: 업데이트할 층 정보
+     */
     override fun updateIpAddressFloor(floor: Int, ipAddresses: List<String>) {
         if (ipAddresses.isEmpty()) return
         queryFactory
@@ -51,6 +55,10 @@ class IpAddressQueryRepositoryImpl(
             .execute()
     }
 
+    /**
+     * 입력받은 IP 주소 리스트를 DB에서 삭제
+     * @param ipAddresses: List<String>: 삭제할 IP 주소 리스트
+     */
     override fun deleteByIpAddresses(ipAddresses: List<String>) {
         if (ipAddresses.isEmpty()) return
         queryFactory
