@@ -8,8 +8,11 @@ import com.aim.server.core.response.SuccessResponse
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.LOGIN_SESSION
 import com.aim.server.domain.admin.dto.AdminConfigData.*
 import com.aim.server.domain.admin.service.AdminConfigService
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
+import org.springframework.validation.Errors
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.*
 class AdminConfigController(
     private val adminConfigService: AdminConfigService
 ) {
+    private val log = KotlinLogging.logger { }
+
     /**
      * 관리자 로그인
      * @param signIn: SignInRequest: 관리자 로그인 정보 (ID / Password)
@@ -66,7 +71,6 @@ class AdminConfigController(
      * @return List<Response>: 관리자 설정 리스트
      */
     @GetMapping(value = ["/config"])
-    @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     fun getAdminConfigs(): BaseResponse<List<APIResponse>> {
         return SuccessResponse.of(adminConfigService.getAdminConfigs())
@@ -78,12 +82,28 @@ class AdminConfigController(
      * @return List<ConfigData>: 관리자 설정 리스트
      */
     @PatchMapping(value = ["/config"])
-    @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     @IsAuthenticated
     fun upsertAdminConfigs(
-        @RequestBody data: List<APIRequest>
+        @RequestBody @Validated configs: KeyAPIRequest,
+        errors: Errors
     ): BaseResponse<List<APIResponse>> {
-        return SuccessResponse.of(adminConfigService.upsertAdminConfigs(data))
+        if (errors.hasErrors()) {
+            throw BaseException(ErrorCode.INVALID_INPUT_VALUE, errors = errors)
+        }
+        return SuccessResponse.of(adminConfigService.upsertAdminConfigs(configs.keys))
+    }
+
+    @PostMapping(value = ["/floor"])
+    @ResponseStatus(value = HttpStatus.OK)
+    @IsAuthenticated
+    fun upsertFloors(
+        @RequestBody @Validated floors: FloorAPIRequest,
+        errors: Errors
+    ): SuccessResponse<Unit> {
+        if (errors.hasErrors()) {
+            throw BaseException(ErrorCode.INVALID_INPUT_VALUE, errors = errors)
+        }
+        return SuccessResponse.empty()
     }
 }

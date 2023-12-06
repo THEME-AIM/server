@@ -23,8 +23,15 @@ class BaseExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(value = [BaseException::class])
     fun handleBaseException(baseException: BaseException): ResponseEntity<ErrorResponse> {
-        return ResponseEntity
-            .status(baseException.errorCode.httpStatus)
-            .body(ErrorResponse.of(baseException.errorCode))
+        return if (baseException.errors != null) {
+            ResponseEntity
+                .status(baseException.errorCode.httpStatus)
+                .body(ErrorResponse.of(errorCode = baseException.errorCode, errors = baseException.errors))
+        } else {
+            ResponseEntity
+                .status(baseException.errorCode.httpStatus)
+                .body(ErrorResponse.of(errorCode = baseException.errorCode))
+        }
+
     }
 }

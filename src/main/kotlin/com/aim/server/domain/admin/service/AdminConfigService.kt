@@ -6,5 +6,5 @@ interface AdminConfigService {
     fun getAdminConfigs(): List<APIResponse>
     fun getAdminConfig(key: String): String
     fun signIn(signIn: SignInRequest)
-    fun upsertAdminConfigs(configs: List<APIRequest>): List<APIResponse>
+    fun upsertAdminConfigs(configs: List<AdminKeys>): List<APIResponse>
 }

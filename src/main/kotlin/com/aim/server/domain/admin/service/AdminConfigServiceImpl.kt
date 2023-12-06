@@ -7,8 +7,8 @@ import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_USERNAME_K
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_PASSWORD_VALUE
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_USERNAME_VALUE
 import com.aim.server.domain.admin.dto.AdminConfigData
-import com.aim.server.domain.admin.dto.AdminConfigData.APIRequest
 import com.aim.server.domain.admin.dto.AdminConfigData.APIResponse
+import com.aim.server.domain.admin.dto.AdminConfigData.AdminKeys
 import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.repository.AdminConfigRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -79,8 +79,8 @@ class AdminConfigServiceImpl(
      * @return List<ConfigData>: 수정 혹은 생성된 관리자 설정 리스트
      */
     @Transactional
-    override fun upsertAdminConfigs(configs: List<APIRequest>): List<APIResponse> = configs.run {
-        val findConfigs = adminConfigRepository.findByKeyIn(this.map(APIRequest::key))
+    override fun upsertAdminConfigs(configs: List<AdminKeys>): List<APIResponse> = configs.run {
+        val findConfigs = adminConfigRepository.findByKeyIn(this.map(AdminKeys::key))
         return this.map {
             findConfigs.find { findConfig -> findConfig.key == it.key }?.apply {
                 this.value = convertValue(it.key, it.value)

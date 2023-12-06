@@ -37,6 +37,9 @@ dependencies {
     // Security
     implementation("org.springframework.boot:spring-boot-starter-security")
 
+    // Validation
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+
     // DB (JPA & QueryDSL)
     implementation("org.postgresql:postgresql")
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")

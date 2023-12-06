@@ -1,7 +1,10 @@
 package com.aim.server.core.exception
 
+import org.springframework.validation.Errors
+
 class BaseException(
-    val errorCode: ErrorCode
+    val errorCode: ErrorCode,
+    val errors: Errors? = null,
 ) : RuntimeException() {
     constructor(errorCode: ErrorCode, message: String) : this(errorCode) {
         this.message = message
