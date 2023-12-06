@@ -1,16 +1,19 @@
 = AIM REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
 
-ifndef::snippets[]
-:snippets: ./build/generated-snippets
-endif::[]
 
 [[Auth]]
 == 인증 API
 
 [[Auth-Login]]
-== 로그인
+=== 로그인
 
-include::{snippets}/admin/sign-in/http-request.adoc[]
-include::{snippets}/admin/sign-in/http-response.adoc[]
+operation::admin/sign-in[snippets='http-request,http-response,response-fields http-response-body']
 
+[[Auth-Logout]]
 [[Auth-Logout]]

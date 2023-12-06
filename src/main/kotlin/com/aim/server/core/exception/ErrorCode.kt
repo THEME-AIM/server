@@ -19,5 +19,4 @@ enum class ErrorCode(
 
     // * 관리자 정보 관련 에러 처리
     CONFIG_NOT_FOUND(HttpStatus.NOT_FOUND, "입력하신 정보와 관련된 설정이 존재하지 않습니다. 다시 한번 확인해주세요."),
-    ;
 }
