@@ -2,13 +2,16 @@ package com.aim.server.domain.admin.service
 
 import com.aim.server.core.exception.BaseException
 import com.aim.server.core.exception.ErrorCode
+import com.aim.server.domain.address.dto.IpAddressData
+import com.aim.server.domain.address.repository.ipAddress.IpAddressBatchRepository
+import com.aim.server.domain.address.repository.ipAddress.IpAddressRepository
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_PASSWORD_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_USERNAME_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_PASSWORD_VALUE
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_USERNAME_VALUE
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.FLOOR_PREFIX
 import com.aim.server.domain.admin.dto.AdminConfigData
-import com.aim.server.domain.admin.dto.AdminConfigData.APIResponse
-import com.aim.server.domain.admin.dto.AdminConfigData.AdminKeys
+import com.aim.server.domain.admin.dto.AdminConfigData.*
 import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.repository.AdminConfigRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -21,6 +24,8 @@ import org.springframework.stereotype.Service
 @Service
 class AdminConfigServiceImpl(
     private val adminConfigRepository: AdminConfigRepository,
+    private val ipAddressRepository: IpAddressRepository,
+    private val ipAddressBatchRepository: IpAddressBatchRepository,
     private val passwordEncoder: PasswordEncoder,
 ) : AdminConfigService {
     private val log = KotlinLogging.logger { }
@@ -86,6 +91,48 @@ class AdminConfigServiceImpl(
                 this.value = convertValue(it.key, it.value)
             } ?: adminConfigRepository.save(AdminConfig(key = it.key, value = convertValue(it.key, it.value)))
         }.map { it.toResponse() }
+    }
+
+    @Transactional
+    override fun upsertFloorConfigs(configs: List<FloorKeys>): List<APIResponse> {
+        // IP Address 전체 조회
+        val findIpAddressWithFloor = ipAddressRepository.findAllIpAddressWithFloor()
+        val findIpAddresses = findIpAddressWithFloor.map { it.ipAddress }.toSet()
+        val usedIpAddresses = mutableSetOf<String>()
+        configs.forEach {
+            val ipAddresses = FloorKeys.betweenIpAddress(it.startIpAddress, it.endIpAddress)
+            ipAddressRepository.updateIpAddressFloor(
+                it.floor,
+                findIpAddressWithFloor.filter { ipAddress ->
+                    ipAddress.ipAddress in ipAddresses.intersect(
+                        findIpAddresses
+                    ) && ipAddress.floor != it.floor
+                }.map { ipAddress ->
+                    ipAddress.ipAddress
+                }
+            )
+            ipAddressBatchRepository.batchInsert(ipAddresses.subtract(findIpAddresses).map { ipAddress ->
+                IpAddressData.IpAddressWithFloor(
+                    ipAddress = ipAddress,
+                    floor = it.floor
+                )
+            })
+            usedIpAddresses.addAll(ipAddresses)
+        }
+        val deleteIpAddresses = findIpAddresses.subtract(usedIpAddresses)
+        if (deleteIpAddresses.isNotEmpty()) {
+            ipAddressRepository.deleteByIpAddresses(deleteIpAddresses.toList())
+        }
+        return upsertAdminConfigs(configs.toAdminKeys())
+    }
+
+    private fun List<FloorKeys>.toAdminKeys(): List<AdminKeys> {
+        val adminKeys = mutableListOf<AdminKeys>()
+        this.forEach {
+            adminKeys.add(AdminKeys(key = "${FLOOR_PREFIX}start_ip_address_0${it.floor}F", value = it.startIpAddress))
+            adminKeys.add(AdminKeys(key = "${FLOOR_PREFIX}end_ip_address_0${it.floor}F", value = it.endIpAddress))
+        }
+        return adminKeys
     }
 
     private fun convertValue(key: String, value: String): String = when (key) {

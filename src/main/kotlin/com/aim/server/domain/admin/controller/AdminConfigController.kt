@@ -100,10 +100,10 @@ class AdminConfigController(
     fun upsertFloors(
         @RequestBody @Validated floors: FloorAPIRequest,
         errors: Errors
-    ): SuccessResponse<Unit> {
+    ): BaseResponse<List<APIResponse>> {
         if (errors.hasErrors()) {
             throw BaseException(ErrorCode.INVALID_INPUT_VALUE, errors = errors)
         }
-        return SuccessResponse.empty()
+        return SuccessResponse.of(adminConfigService.upsertFloorConfigs(floors.floors))
     }
 }

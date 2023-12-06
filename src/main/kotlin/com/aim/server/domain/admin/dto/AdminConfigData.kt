@@ -36,20 +36,35 @@ class AdminConfigData {
     )
 
     data class FloorKeys(
-        @field: NotBlank
         @field: Range(min = 1, max = 10)
         val floor: Int,
 
         @field: NotBlank
-        @field: AdminKey
         @field: IPv4
         val startIpAddress: String,
 
         @field: NotBlank
-        @field: AdminKey
         @field: IPv4
-        val endIpAddress: String
-    )
+        val endIpAddress: String,
+    ) {
+        companion object {
+            fun betweenIpAddress(startIpAddress: String, endIpAddress: String): Set<String> {
+                val startIp = startIpAddress.split(".").map { it.toInt() }
+                val endIp = endIpAddress.split(".").map { it.toInt() }
+                val ipAddresses = mutableListOf<String>()
+                for (i in startIp[0]..endIp[0]) {
+                    for (j in startIp[1]..endIp[1]) {
+                        for (k in startIp[2]..endIp[2]) {
+                            for (l in startIp[3]..endIp[3]) {
+                                ipAddresses.add("$i.$j.$k.$l")
+                            }
+                        }
+                    }
+                }
+                return ipAddresses.toSet()
+            }
+        }
+    }
 
     data class SignInRequest(
         val username: String,

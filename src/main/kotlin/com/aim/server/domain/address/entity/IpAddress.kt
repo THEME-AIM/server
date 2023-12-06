@@ -12,6 +12,12 @@ import jakarta.persistence.*
         )
     ]
 )
+@SequenceGenerator(
+    name = "ip_address_sequence",
+    sequenceName = "ip_address_sequence",
+    initialValue = 1,
+    allocationSize = 100
+)
 data class IpAddress(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

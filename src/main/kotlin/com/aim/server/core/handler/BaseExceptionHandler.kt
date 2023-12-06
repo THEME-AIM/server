@@ -16,6 +16,7 @@ class BaseExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(value = [Exception::class])
     fun handleException(exception: Exception): ResponseEntity<ErrorResponse> {
+        exception.printStackTrace()
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ErrorResponse.of(ErrorCode.SERVER_ERROR))

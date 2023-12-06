@@ -1,9 +1,11 @@
 package com.aim.server.domain.address.repository.ipAddress
 
+import com.aim.server.domain.address.dto.IpAddressData.IpAddressWithFloor
 import com.aim.server.domain.address.entity.IpAddress
-import com.aim.server.domain.address.entity.QIpAddress.ipAddress1 as ipAddress
+import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
-import java.util.Optional
+import java.util.*
+import com.aim.server.domain.address.entity.QIpAddress.ipAddress1 as ipAddress
 
 
 class IpAddressQueryRepositoryImpl(
@@ -25,5 +27,35 @@ class IpAddressQueryRepositoryImpl(
                 .where(ipAddress.ipAddress.eq(value))
                 .fetchOne()
         )
+    }
+
+    override fun findAllIpAddressWithFloor(): List<IpAddressWithFloor> {
+        return queryFactory
+            .select(
+                Projections.constructor(
+                    IpAddressWithFloor::class.java,
+                    ipAddress.floor,
+                    ipAddress.ipAddress
+                )
+            )
+            .from(ipAddress)
+            .fetch()
+    }
+
+    override fun updateIpAddressFloor(floor: Int, ipAddresses: List<String>) {
+        if (ipAddresses.isEmpty()) return
+        queryFactory
+            .update(ipAddress)
+            .set(ipAddress.floor, floor)
+            .where(ipAddress.ipAddress.`in`(ipAddresses))
+            .execute()
+    }
+
+    override fun deleteByIpAddresses(ipAddresses: List<String>) {
+        if (ipAddresses.isEmpty()) return
+        queryFactory
+            .delete(ipAddress)
+            .where(ipAddress.ipAddress.`in`(ipAddresses))
+            .execute()
     }
 }
