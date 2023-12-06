@@ -51,7 +51,7 @@ class AddressServiceImpl(
         }
         ipAddressRepository.updateIpAddress(addressInfo.ipAddress, true)
 
-        addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress)?.let {
+        if(!addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress).isEmpty) {
             throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
         }
 
