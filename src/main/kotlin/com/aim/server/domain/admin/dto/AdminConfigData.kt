@@ -1,13 +1,13 @@
 package com.aim.server.domain.admin.dto
 
 class AdminConfigData {
-    data class Response(
+    data class APIResponse(
         val id: Long,
         val key: String,
         val value: String
     )
 
-    data class Request(
+    data class APIRequest(
         val key: String,
         val value: String
     )

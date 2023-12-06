@@ -33,7 +33,7 @@ class AddressServiceImpl(
                     this.isComputer = it.isComputer
                 })
             } ?: run {
-                ipAddressRepository.updateIpAddress(it.ipAddress)
+                ipAddressRepository.updateIpAddress(it.ipAddress, true)
                 val ipAddress: Optional<IpAddress> = ipAddressRepository.findByIpAddress(it.ipAddress)
                 addressInfoRepository.save(it.toEntity(ipAddress = ipAddress.get()))
             }
@@ -42,7 +42,7 @@ class AddressServiceImpl(
 
     @Transactional
     override fun insertAddressInfo(addressInfo: AddressInfoData) {
-        ipAddressRepository.updateIpAddress(addressInfo.ipAddress)
+        ipAddressRepository.updateIpAddress(addressInfo.ipAddress, true)
         val ipAddress: Optional<IpAddress> = ipAddressRepository.findByIpAddress(addressInfo.ipAddress)
         addressInfoRepository.save(addressInfo.toEntity(ipAddress = ipAddress.get()))
     }
@@ -60,6 +60,7 @@ class AddressServiceImpl(
     @Transactional
     override fun deleteAddressInfo(ipAddress: String) {
         addressInfoRepository.deleteByIpAddress(ipAddress)
+        ipAddressRepository.updateIpAddress(ipAddress, false)
     }
 
 

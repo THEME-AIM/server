@@ -1,12 +1,14 @@
 package com.aim.server.domain.admin.service
 
+import com.aim.server.core.exception.BaseException
+import com.aim.server.core.exception.ErrorCode
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_PASSWORD_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_USERNAME_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_PASSWORD_VALUE
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_USERNAME_VALUE
 import com.aim.server.domain.admin.dto.AdminConfigData
-import com.aim.server.domain.admin.dto.AdminConfigData.Request
-import com.aim.server.domain.admin.dto.AdminConfigData.Response
+import com.aim.server.domain.admin.dto.AdminConfigData.APIRequest
+import com.aim.server.domain.admin.dto.AdminConfigData.APIResponse
 import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.repository.AdminConfigRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -51,19 +53,17 @@ class AdminConfigServiceImpl(
      */
     override fun signIn(signIn: AdminConfigData.SignInRequest) {
         val username = adminConfigRepository.findValueByKey(ADMIN_USERNAME_KEY).orElseThrow {
-            log.error { "admin_username is not found in admin_config table" }
-            Exception("admin_username is not found in admin_config table")
+            BaseException(ErrorCode.INVALID_ID_OR_PASSWORD)
         }
         val password = adminConfigRepository.findValueByKey(ADMIN_PASSWORD_KEY).orElseThrow {
-            log.error { "admin_password is not found in admin_config table" }
-            Exception("admin_password is not found in admin_config table")
+            BaseException(ErrorCode.INVALID_ID_OR_PASSWORD)
         }
 
         log.debug { "로그인 요청: username: ${signIn.username}, password: ${signIn.password} findUsername: $username, findPassword: $password" }
 
         if (username != signIn.username || !passwordEncoder.matches(signIn.password, password)) {
             log.error { "Invalid username or password" }
-            throw Exception("Invalid username or password")
+            throw BaseException(ErrorCode.USER_NOT_MATCHED)
         }
     }
 
@@ -71,7 +71,7 @@ class AdminConfigServiceImpl(
      * 관리자 설정 전체 조회
      * @return List<ConfigData>: 관리자 설정 리스트
      */
-    override fun getAdminConfigs(): List<Response> = adminConfigRepository.findAll().map { it.toResponse() }
+    override fun getAdminConfigs(): List<APIResponse> = adminConfigRepository.findAll().map { it.toResponse() }
 
     /**
      * 관리자 설정 수정 혹은 추가
@@ -79,8 +79,8 @@ class AdminConfigServiceImpl(
      * @return List<ConfigData>: 수정 혹은 생성된 관리자 설정 리스트
      */
     @Transactional
-    override fun upsertAdminConfigs(configs: List<Request>): List<Response> = configs.run {
-        val findConfigs = adminConfigRepository.findByKeyIn(this.map(Request::key))
+    override fun upsertAdminConfigs(configs: List<APIRequest>): List<APIResponse> = configs.run {
+        val findConfigs = adminConfigRepository.findByKeyIn(this.map(APIRequest::key))
         return this.map {
             findConfigs.find { findConfig -> findConfig.key == it.key }?.apply {
                 this.value = convertValue(it.key, it.value)
@@ -99,8 +99,7 @@ class AdminConfigServiceImpl(
      * @return String: 관리자 설정 값
      */
     override fun getAdminConfig(key: String): String = adminConfigRepository.findValueByKey(key).orElseThrow {
-        log.error { "$key is not found in admin_config table" }
-        Exception("$key is not found in admin_config table")
+        BaseException(ErrorCode.CONFIG_NOT_FOUND)
     }
 
     /**

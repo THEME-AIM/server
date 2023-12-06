@@ -1,6 +1,6 @@
 package com.aim.server.domain.admin.entity
 
-import com.aim.server.domain.admin.dto.AdminConfigData.Response
+import com.aim.server.domain.admin.dto.AdminConfigData.APIResponse
 import jakarta.persistence.*
 
 @Entity
@@ -24,7 +24,7 @@ data class AdminConfig(
     @Column(name = "value")
     var value: String,
 ) {
-    fun toResponse() = Response(
+    fun toResponse() = APIResponse(
         id = id,
         key = key,
         value = value
