@@ -2,10 +2,12 @@ package com.aim.server.domain.address.service
 
 import com.aim.server.domain.address.dto.AddressInfoData
 import com.aim.server.domain.address.dto.AddressInfoResponse
+import com.aim.server.domain.address.dto.IpAddressData
 import com.aim.server.domain.address.entity.IpAddress
 import com.aim.server.domain.address.repository.addressInfo.AddressInfoRepository
 import com.aim.server.domain.address.repository.ipAddress.IpAddressRepository
 import com.aim.server.domain.admin.repository.AdminConfigRepository
+import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -92,6 +94,7 @@ class AddressServiceImpl(
             }
 
         }
+
         return returnAddressList
 
     }
@@ -110,21 +113,12 @@ class AddressServiceImpl(
         return returnAddressList
     }
 
-    override fun getRemainedAddress(): List<AddressInfoData> {
-        val firstIp = adminConfigRepository.findValueByKey("start_ip_address").get().split(".")[3].toInt()
-        val endIp = adminConfigRepository.findValueByKey("end_ip_address").get().split(".")[3].toInt()
-        val frontIp = adminConfigRepository.findValueByKey("start_ip_address").get().substringBeforeLast('.')
-        val allAddressList: List<AddressInfoData> = addressInfoRepository.findAll().map {
+    override fun getRemainedAddress(): List<IpAddressData> {
+        val allUnusedAddressList : List<IpAddressData> = ipAddressRepository.findByUnusedIp().map{
             it.toDto()
         }
-        val firstToEndList = (firstIp..endIp).toMutableList()
-        for(i in firstToEndList){
-            var thisTurn = "$frontIp.$i"
-            if(addressInfoRepository.findAllByIpAddress(thisTurn).isEmpty()) continue
-            else firstToEndList.remove(i)
-        }
 
-        return allAddressList
+        return allUnusedAddressList
 
     }
 

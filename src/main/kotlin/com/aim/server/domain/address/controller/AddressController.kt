@@ -3,6 +3,7 @@ package com.aim.server.domain.address.controller
 import com.aim.server.core.annotation.IsAuthenticated
 import com.aim.server.domain.address.dto.AddressInfoData
 import com.aim.server.domain.address.dto.AddressInfoResponse
+import com.aim.server.domain.address.dto.IpAddressData
 import com.aim.server.domain.address.service.AddressService
 import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus
@@ -88,7 +89,7 @@ class AddressController(
      */
     @GetMapping(value = ["/remained"])
     @ResponseStatus(value= HttpStatus.OK)
-    fun getRemainedIp() : List<AddressInfoData>{
+    fun getRemainedIp() : List<IpAddressData>{
         return addressService.getRemainedAddress()
     }
 
