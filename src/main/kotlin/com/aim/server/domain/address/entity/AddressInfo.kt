@@ -1,5 +1,7 @@
 package com.aim.server.domain.address.entity
 
+import com.aim.server.domain.address.dto.AddressInfoData
+import com.aim.server.domain.admin.dto.AdminConfigData
 import jakarta.persistence.*
 
 @Entity
@@ -33,4 +35,14 @@ data class AddressInfo(
     @Column(name = "is_computer", columnDefinition = "BOOLEAN")
     var isComputer: Boolean = true,
 ) {
+    fun toDto(): AddressInfoData {
+        return AddressInfoData(
+            ipAddress = ipAddress.ipAddress,
+            floor = ipAddress.floor,
+            macAddress = macAddress,
+            name = name,
+            department = department,
+            isComputer = isComputer
+        )
+    }
 }

@@ -6,4 +6,6 @@ import java.util.Optional
 interface IpAddressQueryRepository {
     fun updateIpAddress(value: String, isUsed: Boolean)
     fun findByIpAddress(value: String): Optional<IpAddress>
+
+    fun findByUnusedIp() : List<IpAddress>
 }

@@ -1,5 +1,6 @@
 package com.aim.server.domain.address.entity
 
+import com.aim.server.domain.address.dto.IpAddressData
 import jakarta.persistence.*
 
 @Entity
@@ -27,4 +28,10 @@ data class IpAddress(
     var isAssigned: Boolean = false,
 
     ) {
+    fun toDto() : IpAddressData{
+        return IpAddressData(
+            ipAddress = ipAddress,
+            floor = floor
+        )
+    }
 }
