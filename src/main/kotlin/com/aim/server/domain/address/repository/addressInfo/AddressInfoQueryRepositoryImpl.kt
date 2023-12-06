@@ -22,4 +22,12 @@ class AddressInfoQueryRepositoryImpl(
             .where(addressInfo.ipAddress.ipAddress.eq(ipAddress))
             .execute()
     }
+
+    override fun checkDuplicateMacAddress(macAddress: String): Boolean {
+        return queryFactory
+            .select(addressInfo)
+            .from(addressInfo)
+            .where(addressInfo.macAddress.eq(macAddress))
+            .fetchCount() > 0
+    }
 }
