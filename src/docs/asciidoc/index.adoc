@@ -1,16 +1,29 @@
 = AIM REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+<<<<<<< Updated upstream
+=======
+:docdate: 2019-11-01
+:docinfo: shared-head
+//
+>>>>>>> Stashed changes
 
-ifndef::snippets[]
-:snippets: ./build/generated-snippets
-endif::[]
 
-[[Auth]]
-== 인증 API
+include::overview.adoc[]
+include::Auth-API.adoc[]
 
+<<<<<<< Updated upstream
 [[Auth-Login]]
-== 로그인
+=== 로그인
 
-include::{snippets}/admin/sign-in/http-request.adoc[]
-include::{snippets}/admin/sign-in/http-response.adoc[]
+operation::admin/sign-in[snippets='http-request,http-response,response-fields http-response-body']
 
 [[Auth-Logout]]
+[[Auth-Logout]]
+=======
+
+>>>>>>> Stashed changes
