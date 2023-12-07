@@ -10,7 +10,6 @@ import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_USERNAME_K
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_PASSWORD_VALUE
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_USERNAME_VALUE
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.FLOOR_PREFIX
-import com.aim.server.domain.admin.dto.AdminConfigData
 import com.aim.server.domain.admin.dto.AdminConfigData.*
 import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.repository.AdminConfigRepository
@@ -56,7 +55,8 @@ class AdminConfigServiceImpl(
      * 관리자 로그인 정보를 바탕으로 로그인을 진행함. 예외 발생 시 로그인 실패
      * @param signIn: SignInRequest: 관리자 로그인 정보 (ID / Password)
      */
-    override fun signIn(signIn: AdminConfigData.SignInRequest) {
+    override fun signIn(signIn: SignInRequest) {
+
         val username = adminConfigRepository.findValueByKey(ADMIN_USERNAME_KEY).orElseThrow {
             BaseException(ErrorCode.INVALID_ID_OR_PASSWORD)
         }
