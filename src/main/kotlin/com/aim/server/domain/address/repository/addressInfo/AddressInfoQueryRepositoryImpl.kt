@@ -32,4 +32,15 @@ class AddressInfoQueryRepositoryImpl(
                 .fetchOne()
         )
     }
+
+    override fun setAttributeEmpty(tmpList: List<String>) {
+        queryFactory
+            .update(addressInfo)
+            .setNull(addressInfo.macAddress)
+            .set(addressInfo.department, "")
+            .set(addressInfo.name, "")
+            .set(addressInfo.isComputer, true)
+            .where(addressInfo.ipAddress.ipAddress.`in`(tmpList))
+            .execute()
+    }
 }
