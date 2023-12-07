@@ -1,0 +1,49 @@
+[[ConfigAPI]]
+== 관리자 키 설정 API
+
+[[Config-List-200]]
+=== GET /api/admin/config: 관리자 키 목록 정상 처리
+
+NOTE: 관리자 키 목록을 정상적으로 가져온다.
+
+operation::admin/config-list/200[snippets='http-request,response-body']
+
+[[Config-Upsert-200]]
+=== PATCH /api/admin/config: 관리자 키 생성/수정 정상 처리
+
+NOTE: 관리자 키를 생성/수정한다. 정상적으로 처리된 경우 생성/수정된 관리자 키를 반환한다. 이때, 관리자 키는 무조건 'admin.' 으로 시작해야한다.
+
+operation::admin/config-update/200[snippets='http-request,request-body,response-body']
+
+[[Config-Upsert-Error]]
+=== 관리자 키 생성/수정 요청 오류 케이스 정리
+
+[.red]#만약, 정해진 형식의 키 값을 넣지 않을 경우 에러가 발생한다.#
+
+operation::admin/config-update/400[snippets='request-body,response-body']
+
+[[Floor-Upsert-200]]
+=== POST /api/admin/floor: 층 별 시작 IP 및 종료 IP 생성/수정 정상 처리
+
+NOTE: 층 별 시작 IP 및 종료 IP를 생성/수정한다.
+정상적으로 처리된 경우 생성된 관리가 키 값을 반환한다.
+
+operation::admin/floor/200[snippets='http-request,request-body,response-body']
+
+[[Floor-Upsert-Error]]
+=== 층 별 데이터 수정 오류 케이스 정리
+
+[.red]#만약, 키 값에 빈 값을 넣을 경우 에러가 발생한다.#
+
+operation::admin/floor/400/empty-value[snippets='request-body,response-body']
+
+[.red]#만약, 키 값에 허용되지 않은 층수를 넣을 경우 에러가 발생한다. 허용된 층수는 1층부터 10층까지이다.#
+
+operation::admin/floor/400/floor-error[snippets='request-body,response-body']
+
+[.red]#만약, 형식에 맞지 않는 IP 주소를 넣을 경우 에러가 발생한다.#
+
+operation::admin/floor/400/ip-address-error[snippets='request-body,response-body']
+
+#
+

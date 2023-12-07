@@ -99,7 +99,7 @@ tasks {
         outputs.dir(snippetsDir)
         useJUnitPlatform()
     }
-    
+
     asciidoctor {
         dependsOn(test)
         configurations(asciidoctorExt.name)
@@ -132,9 +132,5 @@ tasks {
 
     bootJar {
         dependsOn(asciidoctor)
-
-        from("build/docs/asciidoc") {
-            into("BOOT-INF/classes/static/docs")
-        }
     }
 }

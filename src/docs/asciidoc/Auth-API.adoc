@@ -2,36 +2,33 @@
 == 인증 API
 
 [[Auth-Login-200]]
-=== 로그인 정상 처리
+=== POST /api/admin/sign-in: 로그인 정상 처리
 
 NOTE: 정상적으로 로그인 요청을 보낸다면, 헤더에 JSESSIONID 쿠키를 포함한 200 OK 응답을 반환한다.
 
-operation::admin/sign-in/200[snippets='http-request,request-body,http-response,response-body,response-headers']
+operation::admin/sign-in/200[snippets='http-request,request-body,http-response,response-body']
 
-[[Auth-Login-400]]
-=== 로그인 실패 처리 (입력값 에러)
+[[Auth-Login-Error]]
+=== 로그인 요청 오류 케이스 정리
 
-NOTE: 로그인 요청 정보(username, password)가 올바르지 않은 경우 400 Bad Request 응답을 반환한다.
+[.red]#로그인 요청 정보(username, password)가 올바르지 않은 경우 에러가 발생한다.#
 
-operation::admin/sign-in/400[snippets='http-request,request-body,response-body']
+operation::admin/sign-in/400[snippets='request-body,response-body']
 
-[[Auth-Login-409]]
-=== 로그인 실패 처리 (로그인 재요청)
+[.red]#만약, 이미 로그인한 사용자가 로그인을 시도할 경우 에러가 발생한다.#
 
-NOTE: 만약, 이미 로그인한 사용자가 로그인을 시도할 경우 409 Conflict 응답을 반환한다.
-
-operation::admin/sign-in/409[snippets='http-request,request-body,response-body']
+operation::admin/sign-in/409[snippets='request-body,response-body']
 
 [[Auth-Logout]]
-=== 로그아웃 정상 처리
+=== DELETE /api/admin/sign-out: 로그아웃 정상 처리
 
 NOTE: 정상적으로 로그아웃 요청을 보낸다면, 200 OK 응답을 반환하며, 쿠키 값이 삭제된다.
 
 operation::admin/sign-out/200[snippets='http-request,http-response']
 
-[[Auth-Logout-401]]
-=== 로그아웃 실패 처리 (로그인 되어 있지 않음)
+[[Auth-Logout-Error]]
+=== 로그아웃 요청 오류 케이스 정리
 
-NOTE: 로그아웃 요청을 보낸 사용자가 로그인 되어 있지 않은 경우 401 Unauthorized 응답을 반환한다.
+[.red]#로그아웃 요청을 보낸 사용자가 로그인 되어 있지 않은 경우 에러가 발생한다.#
 
 operation::admin/sign-out/401[snippets='http-request,response-body']

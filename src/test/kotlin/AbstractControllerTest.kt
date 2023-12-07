@@ -42,7 +42,7 @@ abstract class AbstractControllerTest(
     }
 
     @BeforeEach
-    open fun setUp(restDocumentation: RestDocumentationContextProvider?) {
+    fun setUp(restDocumentation: RestDocumentationContextProvider?) {
         this.spec = RequestSpecBuilder()
             .setPort(port)
             .addFilter(

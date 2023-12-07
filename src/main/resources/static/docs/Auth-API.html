@@ -444,7 +444,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="AuthAPI">인증 API</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="Auth-Login-200">로그인 정상 처리</h3>
+<h3 id="Auth-Login-200">POST /api/admin/sign-in: 로그인 정상 처리</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -464,7 +464,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/admin/sign-in HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:53079
+Host: localhost:58073
 Content-Length: 57
 
 {
@@ -493,7 +493,7 @@ Content-Length: 57
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Set-Cookie: JSESSIONID=B57F986E4462942E81AD803C4735625A; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=29D8A7EF2A1E62BDD8B18C67FA09D069; Path=/; HttpOnly
 X-Frame-Options: DENY
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -522,52 +522,14 @@ Content-Length: 76
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="Auth-Login-200_response_headers">Response headers</h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Set-Cookie</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 세션 ID</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 <div class="sect2">
-<h3 id="Auth-Login-400">로그인 실패 처리 (입력값 에러)</h3>
+<h3 id="Auth-Login-Error">로그인 요청 오류 케이스 정리</h3>
 <div class="paragraph">
-<p>로그인 요청 정보(username, password)가 올바르지 않은 경우 400 Bad Request 응답을 반환한다.</p>
+<p><span class="red">로그인 요청 정보(username, password)가 올바르지 않은 경우 에러가 발생한다.</span></p>
 </div>
 <div class="sect3">
-<h4 id="Auth-Login-400_http_request">HTTP request</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/admin/sign-in HTTP/1.1
-Accept: application/json
-Content-Type: application/json
-Host: localhost:53079
-Content-Length: 59
-
-{
-  "username" : "admin",
-  "password" : "WRONG_PASSWORD"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="Auth-Login-400_request_body">Request body</h4>
+<h4 id="Auth-Login-Error_request_body">Request body</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -578,7 +540,7 @@ Content-Length: 59
 </div>
 </div>
 <div class="sect3">
-<h4 id="Auth-Login-400_response_body">Response body</h4>
+<h4 id="Auth-Login-Error_response_body">Response body</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -590,32 +552,11 @@ Content-Length: 59
 </div>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="Auth-Login-409">로그인 실패 처리 (로그인 재요청)</h3>
 <div class="paragraph">
-<p>만약, 이미 로그인한 사용자가 로그인을 시도할 경우 409 Conflict 응답을 반환한다.</p>
+<p><span class="red">만약, 이미 로그인한 사용자가 로그인을 시도할 경우 에러가 발생한다.</span></p>
 </div>
 <div class="sect3">
-<h4 id="Auth-Login-409_http_request">HTTP request</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/admin/sign-in HTTP/1.1
-Accept: application/json
-Content-Type: application/json
-Host: localhost:53079
-Content-Length: 57
-Cookie: JSESSIONID=9433AFA67973D56573627256C2A918C1
-
-{
-  "username" : "admin",
-  "password" : "password123!"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="Auth-Login-409_request_body">Request body</h4>
+<h4 id="Auth-Login-Error_request_body">Request body</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -626,7 +567,7 @@ Cookie: JSESSIONID=9433AFA67973D56573627256C2A918C1
 </div>
 </div>
 <div class="sect3">
-<h4 id="Auth-Login-409_response_body">Response body</h4>
+<h4 id="Auth-Login-Error_response_body">Response body</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -640,9 +581,18 @@ Cookie: JSESSIONID=9433AFA67973D56573627256C2A918C1
 </div>
 </div>
 <div class="sect2">
-<h3 id="Auth-Logout">로그아웃 정상 처리</h3>
-<div class="paragraph">
-<p>정상적으로 로그아웃 요청을 보낸다면, 200 OK 응답을 반환하며, 쿠키 값이 삭제된다.</p>
+<h3 id="Auth-Logout">DELETE /api/admin/sign-out: 로그아웃 정상 처리</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+정상적으로 로그아웃 요청을 보낸다면, 200 OK 응답을 반환하며, 쿠키 값이 삭제된다.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect3">
 <h4 id="Auth-Logout_http_request">HTTP request</h4>
@@ -651,8 +601,8 @@ Cookie: JSESSIONID=9433AFA67973D56573627256C2A918C1
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:53079
-Cookie: JSESSIONID=00D177F45C097F57063D359413A72D8B</code></pre>
+Host: localhost:58073
+Cookie: JSESSIONID=54F30CB928459DAB18BBDB1BF89E3DF0</code></pre>
 </div>
 </div>
 </div>
@@ -672,23 +622,23 @@ Keep-Alive: timeout=60</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="Auth-Logout-401">로그아웃 실패 처리 (로그인 되어 있지 않음)</h3>
+<h3 id="Auth-Logout-Error">로그아웃 요청 오류 케이스 정리</h3>
 <div class="paragraph">
-<p>로그아웃 요청을 보낸 사용자가 로그인 되어 있지 않은 경우 401 Unauthorized 응답을 반환한다.</p>
+<p><span class="red">로그아웃 요청을 보낸 사용자가 로그인 되어 있지 않은 경우 에러가 발생한다.</span></p>
 </div>
 <div class="sect3">
-<h4 id="Auth-Logout-401_http_request">HTTP request</h4>
+<h4 id="Auth-Logout-Error_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:53079</code></pre>
+Host: localhost:58073</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="Auth-Logout-401_response_body">Response body</h4>
+<h4 id="Auth-Logout-Error_response_body">Response body</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
@@ -707,7 +657,7 @@ Host: localhost:53079</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-12-07 20:55:08 +0900
+Last updated 2023-12-08 01:29:18 +0900
 </div>
 </div>
 </body>

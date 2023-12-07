@@ -5,6 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.18">
+<meta name="author" content="&lt;&lt;&lt;&lt;&lt;&lt;&lt; Updated upstream">
 <title>AIM REST API 문서</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -442,7 +443,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>AIM REST API 문서</h1>
 <div class="details">
-<span id="revnumber">version 0.0.1-SNAPSHOT</span>
+<span id="author" class="author">&lt;&lt;&lt;&lt;&lt;&lt;&lt; Updated upstream</span><br>
+<span id="revnumber">version 0.0.1-SNAPSHOT,</span>
+<span id="revdate">=======</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -455,11 +458,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#AuthAPI">인증 API</a>
 <ul class="sectlevel2">
-<li><a href="#Auth-Login-200">로그인 정상 처리</a></li>
-<li><a href="#Auth-Login-400">로그인 실패 처리 (입력값 에러)</a></li>
-<li><a href="#Auth-Login-409">로그인 실패 처리 (로그인 재요청)</a></li>
-<li><a href="#Auth-Logout">로그아웃 정상 처리</a></li>
-<li><a href="#Auth-Logout-401">로그아웃 실패 처리 (로그인 되어 있지 않음)</a></li>
+<li><a href="#Auth-Login-200">POST /api/admin/sign-in: 로그인 정상 처리</a></li>
+<li><a href="#Auth-Login-Error">로그인 요청 오류 케이스 정리</a></li>
+<li><a href="#Auth-Logout">DELETE /api/admin/sign-out: 로그아웃 정상 처리</a></li>
+<li><a href="#Auth-Logout-Error">로그아웃 요청 오류 케이스 정리</a></li>
+</ul>
+</li>
+<li><a href="#ConfigAPI">관리자 키 설정 API</a>
+<ul class="sectlevel2">
+<li><a href="#Config-List-200">GET /api/admin/config: 관리자 키 목록 정상 처리</a></li>
+<li><a href="#Config-Upsert-200">PATCH /api/admin/config: 관리자 키 생성/수정 정상 처리</a></li>
+<li><a href="#Config-Upsert-Error">관리자 키 생성/수정 요청 오류 케이스 정리</a></li>
+<li><a href="#Floor-Upsert-200">POST /api/admin/floor: 층 별 시작 IP 및 종료 IP 생성/수정 정상 처리</a></li>
+<li><a href="#Floor-Upsert-Error">층 별 데이터 수정 오류 케이스 정리</a></li>
 </ul>
 </li>
 </ul>
@@ -541,7 +552,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="AuthAPI"><a class="link" href="#AuthAPI">인증 API</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="Auth-Login-200"><a class="link" href="#Auth-Login-200">로그인 정상 처리</a></h3>
+<h3 id="Auth-Login-200"><a class="link" href="#Auth-Login-200">POST /api/admin/sign-in: 로그인 정상 처리</a></h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -561,7 +572,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/admin/sign-in HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:53079
+Host: localhost:58073
 Content-Length: 57
 
 {
@@ -590,7 +601,7 @@ Content-Length: 57
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Set-Cookie: JSESSIONID=B57F986E4462942E81AD803C4735625A; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=29D8A7EF2A1E62BDD8B18C67FA09D069; Path=/; HttpOnly
 X-Frame-Options: DENY
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -619,52 +630,14 @@ Content-Length: 76
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="Auth-Login-200_response_headers"><a class="link" href="#Auth-Login-200_response_headers">Response headers</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Set-Cookie</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 세션 ID</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 <div class="sect2">
-<h3 id="Auth-Login-400"><a class="link" href="#Auth-Login-400">로그인 실패 처리 (입력값 에러)</a></h3>
+<h3 id="Auth-Login-Error"><a class="link" href="#Auth-Login-Error">로그인 요청 오류 케이스 정리</a></h3>
 <div class="paragraph">
-<p>로그인 요청 정보(username, password)가 올바르지 않은 경우 400 Bad Request 응답을 반환한다.</p>
+<p><span class="red">로그인 요청 정보(username, password)가 올바르지 않은 경우 에러가 발생한다.</span></p>
 </div>
 <div class="sect3">
-<h4 id="Auth-Login-400_http_request"><a class="link" href="#Auth-Login-400_http_request">HTTP request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/admin/sign-in HTTP/1.1
-Accept: application/json
-Content-Type: application/json
-Host: localhost:53079
-Content-Length: 59
-
-{
-  "username" : "admin",
-  "password" : "WRONG_PASSWORD"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="Auth-Login-400_request_body"><a class="link" href="#Auth-Login-400_request_body">Request body</a></h4>
+<h4 id="Auth-Login-Error_request_body"><a class="link" href="#Auth-Login-Error_request_body">Request body</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
@@ -675,7 +648,7 @@ Content-Length: 59
 </div>
 </div>
 <div class="sect3">
-<h4 id="Auth-Login-400_response_body"><a class="link" href="#Auth-Login-400_response_body">Response body</a></h4>
+<h4 id="Auth-Login-Error_response_body"><a class="link" href="#Auth-Login-Error_response_body">Response body</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
@@ -687,32 +660,11 @@ Content-Length: 59
 </div>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="Auth-Login-409"><a class="link" href="#Auth-Login-409">로그인 실패 처리 (로그인 재요청)</a></h3>
 <div class="paragraph">
-<p>만약, 이미 로그인한 사용자가 로그인을 시도할 경우 409 Conflict 응답을 반환한다.</p>
+<p><span class="red">만약, 이미 로그인한 사용자가 로그인을 시도할 경우 에러가 발생한다.</span></p>
 </div>
 <div class="sect3">
-<h4 id="Auth-Login-409_http_request"><a class="link" href="#Auth-Login-409_http_request">HTTP request</a></h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/admin/sign-in HTTP/1.1
-Accept: application/json
-Content-Type: application/json
-Host: localhost:53079
-Content-Length: 57
-Cookie: JSESSIONID=9433AFA67973D56573627256C2A918C1
-
-{
-  "username" : "admin",
-  "password" : "password123!"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="Auth-Login-409_request_body"><a class="link" href="#Auth-Login-409_request_body">Request body</a></h4>
+<h4 id="Auth-Login-Error_request_body"><a class="link" href="#Auth-Login-Error_request_body">Request body</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
@@ -723,7 +675,7 @@ Cookie: JSESSIONID=9433AFA67973D56573627256C2A918C1
 </div>
 </div>
 <div class="sect3">
-<h4 id="Auth-Login-409_response_body"><a class="link" href="#Auth-Login-409_response_body">Response body</a></h4>
+<h4 id="Auth-Login-Error_response_body"><a class="link" href="#Auth-Login-Error_response_body">Response body</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
@@ -737,9 +689,18 @@ Cookie: JSESSIONID=9433AFA67973D56573627256C2A918C1
 </div>
 </div>
 <div class="sect2">
-<h3 id="Auth-Logout"><a class="link" href="#Auth-Logout">로그아웃 정상 처리</a></h3>
-<div class="paragraph">
-<p>정상적으로 로그아웃 요청을 보낸다면, 200 OK 응답을 반환하며, 쿠키 값이 삭제된다.</p>
+<h3 id="Auth-Logout"><a class="link" href="#Auth-Logout">DELETE /api/admin/sign-out: 로그아웃 정상 처리</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+정상적으로 로그아웃 요청을 보낸다면, 200 OK 응답을 반환하며, 쿠키 값이 삭제된다.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect3">
 <h4 id="Auth-Logout_http_request"><a class="link" href="#Auth-Logout_http_request">HTTP request</a></h4>
@@ -748,8 +709,8 @@ Cookie: JSESSIONID=9433AFA67973D56573627256C2A918C1
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:53079
-Cookie: JSESSIONID=00D177F45C097F57063D359413A72D8B</code></pre>
+Host: localhost:58073
+Cookie: JSESSIONID=54F30CB928459DAB18BBDB1BF89E3DF0</code></pre>
 </div>
 </div>
 </div>
@@ -769,23 +730,23 @@ Keep-Alive: timeout=60</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="Auth-Logout-401"><a class="link" href="#Auth-Logout-401">로그아웃 실패 처리 (로그인 되어 있지 않음)</a></h3>
+<h3 id="Auth-Logout-Error"><a class="link" href="#Auth-Logout-Error">로그아웃 요청 오류 케이스 정리</a></h3>
 <div class="paragraph">
-<p>로그아웃 요청을 보낸 사용자가 로그인 되어 있지 않은 경우 401 Unauthorized 응답을 반환한다.</p>
+<p><span class="red">로그아웃 요청을 보낸 사용자가 로그인 되어 있지 않은 경우 에러가 발생한다.</span></p>
 </div>
 <div class="sect3">
-<h4 id="Auth-Logout-401_http_request"><a class="link" href="#Auth-Logout-401_http_request">HTTP request</a></h4>
+<h4 id="Auth-Logout-Error_http_request"><a class="link" href="#Auth-Logout-Error_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:53079</code></pre>
+Host: localhost:58073</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="Auth-Logout-401_response_body"><a class="link" href="#Auth-Logout-401_response_body">Response body</a></h4>
+<h4 id="Auth-Logout-Error_response_body"><a class="link" href="#Auth-Logout-Error_response_body">Response body</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
@@ -800,11 +761,406 @@ Host: localhost:53079</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="ConfigAPI"><a class="link" href="#ConfigAPI">관리자 키 설정 API</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="Config-List-200"><a class="link" href="#Config-List-200">GET /api/admin/config: 관리자 키 목록 정상 처리</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+관리자 키 목록을 정상적으로 가져온다.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="Config-List-200_http_request"><a class="link" href="#Config-List-200_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/admin/config HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:58073
+Cookie: JSESSIONID=31A380B37A8210419BBBB7B818B86751</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Config-List-200_response_body"><a class="link" href="#Config-List-200_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "isSuccess" : true,
+  "code" : 200,
+  "message" : "OK",
+  "data" : [ {
+    "id" : 1,
+    "key" : "admin.username",
+    "value" : "admin"
+  }, {
+    "id" : 2,
+    "key" : "admin.password",
+    "value" : "$2a$10$F9cXbcPIMoA9R2SJRzi/IOYKDlXYtGBOJCcDTzO/8wPWTQ2dfjMxe"
+  }, {
+    "id" : 3,
+    "key" : "admin.floor_start_ip_address_01F",
+    "value" : "192.168.0.1"
+  }, {
+    "id" : 4,
+    "key" : "admin.floor_end_ip_address_01F",
+    "value" : "192.168.0.10"
+  }, {
+    "id" : 5,
+    "key" : "admin.floor_start_ip_address_02F",
+    "value" : "192.168.0.11"
+  }, {
+    "id" : 6,
+    "key" : "admin.floor_end_ip_address_02F",
+    "value" : "192.168.0.20"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Config-Upsert-200"><a class="link" href="#Config-Upsert-200">PATCH /api/admin/config: 관리자 키 생성/수정 정상 처리</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+관리자 키를 생성/수정한다. 정상적으로 처리된 경우 생성/수정된 관리자 키를 반환한다. 이때, 관리자 키는 무조건 'admin.' 으로 시작해야한다.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-200_http_request"><a class="link" href="#Config-Upsert-200_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/admin/config HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:58073
+Content-Length: 159
+Cookie: JSESSIONID=D9D66E5DF2D39ADDD77D40F687EC605F
+
+{
+  "keys" : [ {
+    "key" : "admin.startIpAddress",
+    "value" : "192.168.0.1"
+  }, {
+    "key" : "admin.endIpAddress",
+    "value" : "192.168.0.100"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-200_request_body"><a class="link" href="#Config-Upsert-200_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "keys" : [ {
+    "key" : "admin.startIpAddress",
+    "value" : "192.168.0.1"
+  }, {
+    "key" : "admin.endIpAddress",
+    "value" : "192.168.0.100"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-200_response_body"><a class="link" href="#Config-Upsert-200_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "isSuccess" : true,
+  "code" : 200,
+  "message" : "OK",
+  "data" : [ {
+    "id" : 7,
+    "key" : "admin.startIpAddress",
+    "value" : "192.168.0.1"
+  }, {
+    "id" : 8,
+    "key" : "admin.endIpAddress",
+    "value" : "192.168.0.100"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Config-Upsert-Error"><a class="link" href="#Config-Upsert-Error">관리자 키 생성/수정 요청 오류 케이스 정리</a></h3>
+<div class="paragraph">
+<p><span class="red">만약, 정해진 형식의 키 값을 넣지 않을 경우 에러가 발생한다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-Error_request_body"><a class="link" href="#Config-Upsert-Error_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "keys" : [ {
+    "key" : "subnet_mask_key",
+    "value" : "192.168.0.1"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-Error_response_body"><a class="link" href="#Config-Upsert-Error_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "입력한 값이 올바르지 않습니다.",
+  "errors" : [ {
+    "field" : "keys[0].key",
+    "value" : "subnet_mask_key",
+    "code" : "AdminKey",
+    "message" : "정상적인 관리자 키가 아닙니다. 다시 한번 확인해주세요."
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Floor-Upsert-200"><a class="link" href="#Floor-Upsert-200">POST /api/admin/floor: 층 별 시작 IP 및 종료 IP 생성/수정 정상 처리</a></h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+층 별 시작 IP 및 종료 IP를 생성/수정한다.
+정상적으로 처리된 경우 생성된 관리가 키 값을 반환한다.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-200_http_request"><a class="link" href="#Floor-Upsert-200_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/admin/floor HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:58073
+Content-Length: 216
+Cookie: JSESSIONID=D221C0EB72F38BC003BEB580592E6712
+
+{
+  "floors" : [ {
+    "floor" : 1,
+    "startIpAddress" : "192.168.0.1",
+    "endIpAddress" : "192.168.0.10"
+  }, {
+    "floor" : 2,
+    "startIpAddress" : "192.168.0.11",
+    "endIpAddress" : "192.168.0.20"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-200_request_body"><a class="link" href="#Floor-Upsert-200_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "floors" : [ {
+    "floor" : 1,
+    "startIpAddress" : "192.168.0.1",
+    "endIpAddress" : "192.168.0.10"
+  }, {
+    "floor" : 2,
+    "startIpAddress" : "192.168.0.11",
+    "endIpAddress" : "192.168.0.20"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-200_response_body"><a class="link" href="#Floor-Upsert-200_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "isSuccess" : true,
+  "code" : 200,
+  "message" : "OK",
+  "data" : [ {
+    "id" : 3,
+    "key" : "admin.floor_start_ip_address_01F",
+    "value" : "192.168.0.1"
+  }, {
+    "id" : 4,
+    "key" : "admin.floor_end_ip_address_01F",
+    "value" : "192.168.0.10"
+  }, {
+    "id" : 5,
+    "key" : "admin.floor_start_ip_address_02F",
+    "value" : "192.168.0.11"
+  }, {
+    "id" : 6,
+    "key" : "admin.floor_end_ip_address_02F",
+    "value" : "192.168.0.20"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Floor-Upsert-Error"><a class="link" href="#Floor-Upsert-Error">층 별 데이터 수정 오류 케이스 정리</a></h3>
+<div class="paragraph">
+<p><span class="red">만약, 키 값에 빈 값을 넣을 경우 에러가 발생한다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_request_body"><a class="link" href="#Floor-Upsert-Error_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "floors" : [ {
+    "floor" : 1,
+    "startIpAddress" : "",
+    "endIpAddress" : ""
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_response_body"><a class="link" href="#Floor-Upsert-Error_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "입력한 값이 올바르지 않습니다.",
+  "errors" : [ {
+    "field" : "floors[0].startIpAddress",
+    "value" : "",
+    "code" : "IPv4",
+    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].endIpAddress",
+    "value" : "",
+    "code" : "IPv4",
+    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].startIpAddress",
+    "value" : "",
+    "code" : "NotBlank",
+    "message" : "공백일 수 없습니다"
+  }, {
+    "field" : "floors[0].endIpAddress",
+    "value" : "",
+    "code" : "NotBlank",
+    "message" : "공백일 수 없습니다"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="red">만약, 키 값에 허용되지 않은 층수를 넣을 경우 에러가 발생한다. 허용된 층수는 1층부터 10층까지이다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_request_body"><a class="link" href="#Floor-Upsert-Error_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "floors" : [ {
+    "floor" : 0,
+    "startIpAddress" : "192.168.0.1",
+    "endIpAddress" : "192.168.0.10"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_response_body"><a class="link" href="#Floor-Upsert-Error_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "입력한 값이 올바르지 않습니다.",
+  "errors" : [ {
+    "field" : "floors[0].floor",
+    "value" : "0",
+    "code" : "Range",
+    "message" : "1에서 10 사이여야 합니다"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="red">만약, 형식에 맞지 않는 IP 주소를 넣을 경우 에러가 발생한다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_request_body"><a class="link" href="#Floor-Upsert-Error_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "floors" : [ {
+    "floor" : 1,
+    "startIpAddress" : "192.168.0.1",
+    "endIpAddress" : "192.168.0"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_response_body"><a class="link" href="#Floor-Upsert-Error_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "입력한 값이 올바르지 않습니다.",
+  "errors" : [ {
+    "field" : "floors[0].endIpAddress",
+    "value" : "192.168.0",
+    "code" : "IPv4",
+    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>#</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-12-07 21:08:14 +0900
+Last updated 2023-12-08 01:27:50 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

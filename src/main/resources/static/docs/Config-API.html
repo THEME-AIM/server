@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.18">
-<title>Overview</title>
+<title>관리자 키 설정 API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -441,73 +441,397 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="overview">Overview</h2>
+<h2 id="ConfigAPI">관리자 키 설정 API</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="overview-host">Database</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
+<h3 id="Config-List-200">GET /api/admin/config: 관리자 키 목록 정상 처리</h3>
+<div class="admonitionblock note">
+<table>
 <tr>
-<th class="tableblock halign-left valign-top">환경</th>
-<th class="tableblock halign-left valign-top">데이터베이스명</th>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+관리자 키 목록을 정상적으로 가져온다.
+</td>
 </tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Test</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">aim_test</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Production</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">postgres</p></td>
-</tr>
-</tbody>
 </table>
 </div>
+<div class="sect3">
+<h4 id="Config-List-200_http_request">HTTP request</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/admin/config HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:58073
+Cookie: JSESSIONID=31A380B37A8210419BBBB7B818B86751</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Config-List-200_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "isSuccess" : true,
+  "code" : 200,
+  "message" : "OK",
+  "data" : [ {
+    "id" : 1,
+    "key" : "admin.username",
+    "value" : "admin"
+  }, {
+    "id" : 2,
+    "key" : "admin.password",
+    "value" : "$2a$10$F9cXbcPIMoA9R2SJRzi/IOYKDlXYtGBOJCcDTzO/8wPWTQ2dfjMxe"
+  }, {
+    "id" : 3,
+    "key" : "admin.floor_start_ip_address_01F",
+    "value" : "192.168.0.1"
+  }, {
+    "id" : 4,
+    "key" : "admin.floor_end_ip_address_01F",
+    "value" : "192.168.0.10"
+  }, {
+    "id" : 5,
+    "key" : "admin.floor_start_ip_address_02F",
+    "value" : "192.168.0.11"
+  }, {
+    "id" : 6,
+    "key" : "admin.floor_end_ip_address_02F",
+    "value" : "192.168.0.20"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 <div class="sect2">
-<h3 id="overview-http-status-codes">HTTP status codes</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
+<h3 id="Config-Upsert-200">PATCH /api/admin/config: 관리자 키 생성/수정 정상 처리</h3>
+<div class="admonitionblock note">
+<table>
 <tr>
-<th class="tableblock halign-left valign-top">상태 코드</th>
-<th class="tableblock halign-left valign-top">설명</th>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+관리자 키를 생성/수정한다. 정상적으로 처리된 경우 생성/수정된 관리자 키를 반환한다. 이때, 관리자 키는 무조건 'admin.' 으로 시작해야한다.
+</td>
 </tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>200 OK</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">성공</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">잘못된 요청</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>401 Unauthorized</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">비인증 상태</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>403 Forbidden</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">권한 거부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 요청 리소스</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>500 Internal Server Error</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">서버 에러</p></td>
-</tr>
-</tbody>
 </table>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-200_http_request">HTTP request</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/admin/config HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:58073
+Content-Length: 159
+Cookie: JSESSIONID=D9D66E5DF2D39ADDD77D40F687EC605F
+
+{
+  "keys" : [ {
+    "key" : "admin.startIpAddress",
+    "value" : "192.168.0.1"
+  }, {
+    "key" : "admin.endIpAddress",
+    "value" : "192.168.0.100"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-200_request_body">Request body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "keys" : [ {
+    "key" : "admin.startIpAddress",
+    "value" : "192.168.0.1"
+  }, {
+    "key" : "admin.endIpAddress",
+    "value" : "192.168.0.100"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-200_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "isSuccess" : true,
+  "code" : 200,
+  "message" : "OK",
+  "data" : [ {
+    "id" : 7,
+    "key" : "admin.startIpAddress",
+    "value" : "192.168.0.1"
+  }, {
+    "id" : 8,
+    "key" : "admin.endIpAddress",
+    "value" : "192.168.0.100"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Config-Upsert-Error">관리자 키 생성/수정 요청 오류 케이스 정리</h3>
+<div class="paragraph">
+<p><span class="red">만약, 정해진 형식의 키 값을 넣지 않을 경우 에러가 발생한다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-Error_request_body">Request body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "keys" : [ {
+    "key" : "subnet_mask_key",
+    "value" : "192.168.0.1"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Config-Upsert-Error_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "입력한 값이 올바르지 않습니다.",
+  "errors" : [ {
+    "field" : "keys[0].key",
+    "value" : "subnet_mask_key",
+    "code" : "AdminKey",
+    "message" : "정상적인 관리자 키가 아닙니다. 다시 한번 확인해주세요."
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Floor-Upsert-200">POST /api/admin/floor: 층 별 시작 IP 및 종료 IP 생성/수정 정상 처리</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+층 별 시작 IP 및 종료 IP를 생성/수정한다.
+정상적으로 처리된 경우 생성된 관리가 키 값을 반환한다.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-200_http_request">HTTP request</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/admin/floor HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Host: localhost:58073
+Content-Length: 216
+Cookie: JSESSIONID=D221C0EB72F38BC003BEB580592E6712
+
+{
+  "floors" : [ {
+    "floor" : 1,
+    "startIpAddress" : "192.168.0.1",
+    "endIpAddress" : "192.168.0.10"
+  }, {
+    "floor" : 2,
+    "startIpAddress" : "192.168.0.11",
+    "endIpAddress" : "192.168.0.20"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-200_request_body">Request body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "floors" : [ {
+    "floor" : 1,
+    "startIpAddress" : "192.168.0.1",
+    "endIpAddress" : "192.168.0.10"
+  }, {
+    "floor" : 2,
+    "startIpAddress" : "192.168.0.11",
+    "endIpAddress" : "192.168.0.20"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-200_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "isSuccess" : true,
+  "code" : 200,
+  "message" : "OK",
+  "data" : [ {
+    "id" : 3,
+    "key" : "admin.floor_start_ip_address_01F",
+    "value" : "192.168.0.1"
+  }, {
+    "id" : 4,
+    "key" : "admin.floor_end_ip_address_01F",
+    "value" : "192.168.0.10"
+  }, {
+    "id" : 5,
+    "key" : "admin.floor_start_ip_address_02F",
+    "value" : "192.168.0.11"
+  }, {
+    "id" : 6,
+    "key" : "admin.floor_end_ip_address_02F",
+    "value" : "192.168.0.20"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Floor-Upsert-Error">층 별 데이터 수정 오류 케이스 정리</h3>
+<div class="paragraph">
+<p><span class="red">만약, 키 값에 빈 값을 넣을 경우 에러가 발생한다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_request_body">Request body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "floors" : [ {
+    "floor" : 1,
+    "startIpAddress" : "",
+    "endIpAddress" : ""
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "입력한 값이 올바르지 않습니다.",
+  "errors" : [ {
+    "field" : "floors[0].startIpAddress",
+    "value" : "",
+    "code" : "IPv4",
+    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].endIpAddress",
+    "value" : "",
+    "code" : "IPv4",
+    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].startIpAddress",
+    "value" : "",
+    "code" : "NotBlank",
+    "message" : "공백일 수 없습니다"
+  }, {
+    "field" : "floors[0].endIpAddress",
+    "value" : "",
+    "code" : "NotBlank",
+    "message" : "공백일 수 없습니다"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="red">만약, 키 값에 허용되지 않은 층수를 넣을 경우 에러가 발생한다. 허용된 층수는 1층부터 10층까지이다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_request_body">Request body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "floors" : [ {
+    "floor" : 0,
+    "startIpAddress" : "192.168.0.1",
+    "endIpAddress" : "192.168.0.10"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "입력한 값이 올바르지 않습니다.",
+  "errors" : [ {
+    "field" : "floors[0].floor",
+    "value" : "0",
+    "code" : "Range",
+    "message" : "1에서 10 사이여야 합니다"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="red">만약, 형식에 맞지 않는 IP 주소를 넣을 경우 에러가 발생한다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_request_body">Request body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "floors" : [ {
+    "floor" : 1,
+    "startIpAddress" : "192.168.0.1",
+    "endIpAddress" : "192.168.0"
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Floor-Upsert-Error_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "입력한 값이 올바르지 않습니다.",
+  "errors" : [ {
+    "field" : "floors[0].endIpAddress",
+    "value" : "192.168.0",
+    "code" : "IPv4",
+    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>#</p>
+</div>
 </div>
 </div>
 </div>
@@ -515,7 +839,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-12-07 22:20:16 +0900
+Last updated 2023-12-08 01:31:14 +0900
 </div>
 </div>
 </body>

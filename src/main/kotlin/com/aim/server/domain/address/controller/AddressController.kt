@@ -1,8 +1,6 @@
 package com.aim.server.domain.address.controller
 
 import com.aim.server.core.annotation.IsAuthenticated
-import com.aim.server.core.response.BaseResponse
-import com.aim.server.core.response.SuccessResponse
 import com.aim.server.domain.address.dto.AddressInfoData
 import com.aim.server.domain.address.service.AddressService
 import jakarta.websocket.server.PathParam
@@ -24,9 +22,8 @@ class AddressController(
 //    @IsAuthenticated
     fun uploadIp(
         @RequestBody addressInfo: AddressInfoData
-    ): BaseResponse<Unit> {
-        addressService.insertAddressInfo(addressInfo)
-        return SuccessResponse(201, "IP 정보 업로드 성공", Unit)
+    ) {
+        return addressService.insertAddressInfo(addressInfo)
     }
 
     /**
@@ -39,9 +36,8 @@ class AddressController(
 //    @IsAuthenticated
     fun uploadIpBulk(
         @RequestBody addressInfo: List<AddressInfoData>
-    ): BaseResponse<Unit> {
-        addressService.upsertAddressInfo(addressInfo)
-        return SuccessResponse(201, "IP 정보 업로드 성공", Unit)
+    ) {
+        return addressService.upsertAddressInfo(addressInfo)
     }
 
     /**
@@ -54,9 +50,8 @@ class AddressController(
     fun updateIp(
         @PathVariable(value = "ipAddress") ipAddress: String,
         @RequestBody addressInfo: AddressInfoData
-    ): BaseResponse<Unit> {
-        addressService.updateAddressInfo(addressInfo, ipAddress)
-        return SuccessResponse(200, "IP 정보 업데이트 성공", Unit)
+    ) {
+        return addressService.updateAddressInfo(addressInfo, ipAddress)
     }
 
     /**
@@ -68,8 +63,7 @@ class AddressController(
     @ResponseStatus(value = HttpStatus.OK)
     fun deleteIp(
         @PathVariable ipAddress: String,
-    ): BaseResponse<Unit> {
-        addressService.deleteAddressInfo(ipAddress)
-        return SuccessResponse(200, "IP 정보 삭제 성공", Unit)
+    ) {
+        return addressService.deleteAddressInfo(ipAddress)
     }
 }

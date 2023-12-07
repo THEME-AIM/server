@@ -10,20 +10,9 @@
 :docdate: 2019-11-01
 :docinfo: shared-head
 //
->>>>>>> Stashed changes
 
 
 include::overview.adoc[]
 include::Auth-API.adoc[]
+include::Config-API.adoc[]
 
-<<<<<<< Updated upstream
-[[Auth-Login]]
-=== 로그인
-
-operation::admin/sign-in[snippets='http-request,http-response,response-fields http-response-body']
-
-[[Auth-Logout]]
-[[Auth-Logout]]
-=======
-
->>>>>>> Stashed changes
