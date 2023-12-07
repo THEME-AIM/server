@@ -41,7 +41,11 @@ class AddressServiceImpl(
 
         addressInfo.forEach {
             if (tmpList.contains(it.ipAddress)) {
-                addressInfoRepository.updateAddressInfo(it)
+                try {
+                    addressInfoRepository.updateAddressInfo(it)
+                } catch (e: Exception) {
+                    throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
+                }
             } else {
                 this.insertAddressInfo(it)
             }
