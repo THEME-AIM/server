@@ -85,7 +85,7 @@ class AdminConfigController(
      */
     @PatchMapping(value = ["/config"])
     @ResponseStatus(value = HttpStatus.OK)
-    @IsAuthenticated
+//    @IsAuthenticated
     fun upsertAdminConfigs(
         @RequestBody @Validated configs: KeyAPIRequest,
         errors: Errors

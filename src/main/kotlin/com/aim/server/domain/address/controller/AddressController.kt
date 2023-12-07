@@ -2,6 +2,8 @@ package com.aim.server.domain.address.controller
 
 import com.aim.server.core.annotation.IsAuthenticated
 import com.aim.server.domain.address.dto.AddressInfoData
+import com.aim.server.domain.address.dto.AddressInfoResponse
+import com.aim.server.domain.address.dto.IpAddressData
 import com.aim.server.domain.address.service.AddressService
 import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus
@@ -65,5 +67,44 @@ class AddressController(
         @PathVariable ipAddress: String,
     ) {
         return addressService.deleteAddressInfo(ipAddress)
+    }
+
+    /**
+     * IP 리스트 확인
+     * @param String: IP 주소
+     * @return Unit
+     */
+    @GetMapping
+    @ResponseStatus(value = HttpStatus.OK)
+    fun getIpList(
+        @RequestParam type : String,
+    ) : List<AddressInfoResponse>{
+        return addressService.getAddressInfo(type)
+    }
+
+    /**
+     * 잔여 IP 확인
+     * @param String: IP 주소
+     * @return Unit
+     */
+    @GetMapping(value = ["/remained"])
+    @ResponseStatus(value= HttpStatus.OK)
+    fun getRemainedIp() : List<IpAddressData>{
+        return addressService.getRemainedAddress()
+    }
+
+    /**
+     * 개인 IP 검색
+     * @param String: IP 주소
+     * @return Unit
+     */
+    // /api/addrress/search?keyword={키워드}&value={값}
+    @GetMapping(value = ["/search"])
+    @ResponseStatus(value = HttpStatus.OK)
+    fun searchIp(
+        @RequestParam keyword : String,
+        @RequestParam  value : String
+    ) : List<AddressInfoData>{
+        return addressService.searchAddressInfo(keyword,value)
     }
 }

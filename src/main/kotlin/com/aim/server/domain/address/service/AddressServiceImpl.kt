@@ -3,9 +3,13 @@ package com.aim.server.domain.address.service
 import com.aim.server.core.exception.BaseException
 import com.aim.server.core.exception.ErrorCode
 import com.aim.server.domain.address.dto.AddressInfoData
+import com.aim.server.domain.address.dto.AddressInfoResponse
+import com.aim.server.domain.address.dto.IpAddressData
 import com.aim.server.domain.address.entity.IpAddress
 import com.aim.server.domain.address.repository.addressInfo.AddressInfoRepository
 import com.aim.server.domain.address.repository.ipAddress.IpAddressRepository
+import com.aim.server.domain.admin.repository.AdminConfigRepository
+import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -13,7 +17,8 @@ import java.util.*
 @Service
 class AddressServiceImpl(
     private val addressInfoRepository: AddressInfoRepository,
-    private val ipAddressRepository: IpAddressRepository
+    private val ipAddressRepository: IpAddressRepository,
+    private val adminConfigRepository: AdminConfigRepository
 ) : AddressService {
     @Transactional
     override fun upsertAddressInfo(addressInfo: List<AddressInfoData>) {
@@ -86,4 +91,66 @@ class AddressServiceImpl(
         addressInfoRepository.deleteByIpAddress(ipAddress)
         ipAddressRepository.updateIpAddress(ipAddress, false)
     }
+
+
+    override fun getAddressInfo(type: String): List<AddressInfoResponse> {
+        val allAddressList: List<AddressInfoData> = addressInfoRepository.findAll().map {
+            it.toDto()
+        }
+        val returnAddressList: MutableList<AddressInfoResponse> = mutableListOf()
+        if (type == "floor") {
+            val floorList: List<Int> = addressInfoRepository.getFloorList()
+            for (i in floorList) {
+                var thisTurn = AddressInfoResponse(i.toString(), mutableListOf())
+                for (tmp in allAddressList) {
+                    if (i == tmp.floor) {
+                        thisTurn.addressList.add(tmp)
+                    }
+                }
+                returnAddressList.add(thisTurn)
+
+            }
+
+        } else if (type == "dept") {
+            val deptList: List<String> = addressInfoRepository.getDeptList()
+            for (i in deptList) {
+                var thisTurn = AddressInfoResponse(i.toString(), mutableListOf())
+                for (tmp in allAddressList) {
+                    if (i == tmp.department) {
+                        thisTurn.addressList.add(tmp)
+                    }
+                }
+                returnAddressList.add(thisTurn)
+            }
+
+        }
+
+        return returnAddressList
+
+    }
+
+    override fun searchAddressInfo(keyword: String, value: String): List<AddressInfoData> {
+        var returnAddressList : List<AddressInfoData> = mutableListOf()
+        if(keyword == "ip"){
+            returnAddressList = addressInfoRepository.findAllByIpAddress(value).map { it.toDto() }
+        }
+        else if(keyword == "mac"){
+            returnAddressList = addressInfoRepository.findAllByMac(value).map { it.toDto() }
+        }
+        else if(keyword == "name"){
+            returnAddressList = addressInfoRepository.findAllByName(value).map { it.toDto() }
+        }
+        return returnAddressList
+    }
+
+    override fun getRemainedAddress(): List<IpAddressData> {
+        val allUnusedAddressList : List<IpAddressData> = ipAddressRepository.findByUnusedIp().map{
+            it.toDto()
+        }
+
+        return allUnusedAddressList
+
+    }
+
+
 }

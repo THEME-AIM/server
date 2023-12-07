@@ -55,4 +55,44 @@ class AddressInfoQueryRepositoryImpl(
             .where(addressInfo.ipAddress.ipAddress.eq(addressInfoData.ipAddress))
             .execute()
     }
+
+    override fun getFloorList(): List<Int> {
+        return queryFactory
+            .select(addressInfo.ipAddress.floor).distinct()
+            .from(addressInfo)
+            .fetch()
+    }
+
+    override fun getDeptList(): List<String> {
+        return queryFactory
+            .select(addressInfo.department).distinct()
+            .from(addressInfo)
+            .fetch()
+    }
+
+    override fun findAllByIpAddress(ipAddress: String): List<AddressInfo> {
+        return queryFactory
+            .select(addressInfo)
+            .from(addressInfo)
+            .where(addressInfo.ipAddress.ipAddress.eq(ipAddress))
+            .fetch()
+    }
+
+    override fun findAllByName(name: String): List<AddressInfo> {
+        return queryFactory
+            .select(addressInfo)
+            .from(addressInfo)
+            .where(addressInfo.name.eq(name))
+            .fetch()
+    }
+
+    override fun findAllByMac(mac: String): List<AddressInfo> {
+        return queryFactory
+            .select(addressInfo)
+            .from(addressInfo)
+            .where(addressInfo.macAddress.eq(mac))
+            .fetch()
+    }
+
+
 }

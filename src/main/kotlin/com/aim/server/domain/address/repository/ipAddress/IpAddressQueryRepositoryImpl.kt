@@ -66,4 +66,12 @@ class IpAddressQueryRepositoryImpl(
             .where(ipAddress.ipAddress.`in`(ipAddresses))
             .execute()
     }
+
+    override fun findByUnusedIp(): List<IpAddress> {
+        return queryFactory
+            .select(ipAddress)
+            .from(ipAddress)
+            .where(ipAddress.isAssigned.eq(false))
+            .fetch()
+    }
 }

@@ -10,4 +10,6 @@ interface IpAddressQueryRepository {
     fun findAllIpAddressWithFloor(): List<IpAddressWithFloor>
     fun updateIpAddressFloor(floor: Int, ipAddresses: List<String>)
     fun deleteByIpAddresses(ipAddresses: List<String>)
+
+    fun findByUnusedIp() : List<IpAddress>
 }
