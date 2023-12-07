@@ -65,6 +65,15 @@ dependencies {
     // Spring Rest Docs
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    testImplementation("io.rest-assured:spring-mock-mvc:5.3.1")
+    implementation("org.springframework.restdocs:spring-restdocs-restassured")
+    testImplementation("com.natpryce:konfig:1.6.10.0")
+
+    // KoTest
+    testImplementation("io.kotest:kotest-assertions-core:5.5.5")
+    testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
+    testImplementation("io.mockk:mockk:1.13.4")
 }
 
 tasks.withType<KotlinCompile> {
@@ -82,49 +91,25 @@ tasks.bootBuildImage {
     builder.set("paketobuildpacks/builder-jammy-base:latest")
 }
 
+val snippetsDir by extra {
+    file("build/generated-snippets")
+}
 // Rest Docs Setting
 
 tasks {
-    val snippetsDir = file("build/generated-snippets")
-
-    test {
-        outputs.dir(snippetsDir)
-        useJUnitPlatform()
-    }
-
-    build {
-        dependsOn("copyDocument")
-    }
-
     asciidoctor {
-        inputs.dir(snippetsDir)
-
-        forkOptions {
-            jvmArgs("--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED")
-        }
-
         dependsOn(test)
-
-        doFirst {
-            delete("src/main/resources/static/docs")
-        }
+        baseDirFollowsSourceFile()
+        inputs.dir(snippetsDir)
     }
 
     register<Copy>("copyDocument") {
         dependsOn(asciidoctor)
-
-        destinationDir = file("src/main/resources/static")
-
-        from("build/docs/asciidoc") {
-            this.into("docs")
-        }
+        from(file("build/docs/asciidoc/index.html"))
+        into(file("src/main/resources/static/docs"))
     }
-
+    
     bootJar {
-        dependsOn(asciidoctor)
-
-        from("build/docs/asciidoc") {
-            into("BOOT-INF/classes/static/docs")
-        }
+        dependsOn("copyDocument")
     }
 }

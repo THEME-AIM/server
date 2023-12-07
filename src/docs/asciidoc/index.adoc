@@ -10,7 +10,4 @@ endif::[]
 [[Auth-Login]]
 == 로그인
 
-include::{snippets}/admin/sign-in/http-request.adoc[]
-include::{snippets}/admin/sign-in/http-response.adoc[]
-
 [[Auth-Logout]]
