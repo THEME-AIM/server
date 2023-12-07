@@ -20,8 +20,7 @@ java {
 repositories {
     mavenCentral()
 }
-
-
+val asciidoctorExt: Configuration by configurations.creating
 
 allOpen {
     annotation("jakarta.persistence.Entity")
@@ -64,7 +63,16 @@ dependencies {
 
     // Spring Rest Docs
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    testImplementation("io.rest-assured:spring-mock-mvc:5.3.1")
+    implementation("org.springframework.restdocs:spring-restdocs-restassured")
+    testImplementation("com.natpryce:konfig:1.6.10.0")
+
+    // KoTest
+    testImplementation("io.kotest:kotest-assertions-core:5.5.5")
+    testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3")
+    testImplementation("io.mockk:mockk:1.13.4")
 }
 
 tasks.withType<KotlinCompile> {
@@ -91,19 +99,17 @@ tasks {
         outputs.dir(snippetsDir)
         useJUnitPlatform()
     }
-
-    build {
-        dependsOn("copyDocument")
-    }
-
+    
     asciidoctor {
+        dependsOn(test)
+        configurations(asciidoctorExt.name)
         inputs.dir(snippetsDir)
 
-        forkOptions {
-            jvmArgs("--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", "--add-opens", "java.base/java.io=ALL-UNNAMED")
+        sources {
+            include("**/*.adoc", "**/common/*.adoc")
         }
 
-        dependsOn(test)
+        baseDirFollowsSourceFile()
 
         doFirst {
             delete("src/main/resources/static/docs")
@@ -118,6 +124,10 @@ tasks {
         from("build/docs/asciidoc") {
             this.into("docs")
         }
+    }
+
+    build {
+        dependsOn("copyDocument")
     }
 
     bootJar {

@@ -58,6 +58,7 @@ class AdminConfigController(
     ): SuccessResponse<Unit> {
         // session을 조회하여 로그인 되어있는지 확인
         val session = request.session.getAttribute(LOGIN_SESSION)
+        log.debug { "session: $session" }
         if (session == null || !(session as Boolean)) {
             throw BaseException(ErrorCode.USER_NOT_LOGGED_IN)
         }

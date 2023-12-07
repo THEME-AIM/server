@@ -5,11 +5,18 @@
 :toc: left
 :toclevels: 2
 :sectlinks:
+<<<<<<< Updated upstream
+=======
+:docdate: 2019-11-01
+:docinfo: shared-head
+//
+>>>>>>> Stashed changes
 
 
-[[Auth]]
-== 인증 API
+include::overview.adoc[]
+include::Auth-API.adoc[]
 
+<<<<<<< Updated upstream
 [[Auth-Login]]
 === 로그인
 
@@ -17,3 +24,6 @@ operation::admin/sign-in[snippets='http-request,http-response,response-fields ht
 
 [[Auth-Logout]]
 [[Auth-Logout]]
+=======
+
+>>>>>>> Stashed changes
