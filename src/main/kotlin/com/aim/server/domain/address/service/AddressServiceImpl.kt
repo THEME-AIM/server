@@ -19,37 +19,31 @@ class AddressServiceImpl(
     override fun upsertAddressInfo(addressInfo: List<AddressInfoData>) {
         val matchedAddressInfo = addressInfoRepository.findByIpAddress(addressInfo.map { it.ipAddress })
 
-        val tmpList = mutableListOf<String>()
-
-
-        addressInfo.map {
-            matchedAddressInfo.find { matchedAddressInfo ->
-                matchedAddressInfo.ipAddress.ipAddress == it.ipAddress
-            }?.let {
-                tmpList.add(it.ipAddress.ipAddress)
-            }
-        }
+        val tmpList = matchedAddressInfo.map { it.ipAddress.ipAddress }.toList()
 
         addressInfoRepository.setAttributeEmpty(tmpList)
 
+        //TODO: 왜 아래 코드는 update가 제대로 일어나지 않는가
 
-        addressInfo.map {
-            matchedAddressInfo.find { matchedAddressInfo ->
-                matchedAddressInfo.ipAddress.ipAddress == it.ipAddress
-            }?.let { matchedAddressInfo ->
-                // 기존에 있던 IP 주소가 업데이트 되는 경우
-                addressInfoRepository.save(matchedAddressInfo.apply {
-                    this.macAddress = it.macAddress
-                    this.department = it.department
-                    this.ipAddress.floor = it.floor
-                    this.name = it.name
-                    this.isComputer = it.isComputer
-                })
-            } ?: run {
-                // 새로운 IP 주소가 추가되는 경우
-                ipAddressRepository.updateIpAddress(it.ipAddress, true)
-                val ipAddress: Optional<IpAddress> = ipAddressRepository.findByIpAddress(it.ipAddress)
-                addressInfoRepository.save(it.toEntity(ipAddress = ipAddress.get()))
+//        addressInfo.map {
+//            matchedAddressInfo.find { matchedAddressInfo ->
+//                matchedAddressInfo.ipAddress.ipAddress == it.ipAddress
+//            }?.apply {
+//                this.macAddress = it.macAddress
+//                this.department = it.department
+//                this.ipAddress.floor = it.floor
+//                this.name = it.name
+//                this.isComputer = it.isComputer
+//            } ?: run {
+//                this.insertAddressInfo(it)
+//            }
+//        }
+
+        addressInfo.forEach {
+            if (tmpList.contains(it.ipAddress)) {
+                addressInfoRepository.updateAddressInfo(it)
+            } else {
+                this.insertAddressInfo(it)
             }
         }
     }
@@ -59,14 +53,14 @@ class AddressServiceImpl(
 
         val ipAddress: Optional<IpAddress> = ipAddressRepository.findByIpAddress(addressInfo.ipAddress)
 
-        if(ipAddress.isEmpty) {
+        if (ipAddress.isEmpty) {
             throw BaseException(ErrorCode.IP_ADDRESS_NOT_FOUND)
         } else if (ipAddress.get().isAssigned) {
             throw BaseException(ErrorCode.IP_ADDRESS_ALREADY_EXISTS)
         }
         ipAddressRepository.updateIpAddress(addressInfo.ipAddress, true)
 
-        if(!addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress).isEmpty) {
+        if (!addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress).isEmpty) {
             throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
         }
 
