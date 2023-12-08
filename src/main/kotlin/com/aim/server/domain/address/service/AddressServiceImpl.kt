@@ -96,60 +96,40 @@ class AddressServiceImpl(
         val allAddressList: List<AddressInfoData> = addressInfoRepository.findAll().map {
             it.toDto()
         }
-        val returnAddressList: MutableList<AddressInfoResponse> = mutableListOf()
-        if (type == "floor") {
-            val floorList: List<Int> = addressInfoRepository.getFloorList()
-            for (i in floorList) {
-                var thisTurn = AddressInfoResponse(i.toString(), mutableListOf())
-                for (tmp in allAddressList) {
-                    if (i == tmp.floor) {
-                        thisTurn.addressList.add(tmp)
-                    }
+
+        return when (type) {
+            "floor" -> {
+                val groupedByFloor = allAddressList.groupBy { it.floor.toString() }
+                groupedByFloor.map { (floor, addresses) ->
+                    AddressInfoResponse(floor, addresses.toMutableList())
                 }
-                returnAddressList.add(thisTurn)
-
             }
-
-        } else if (type == "dept") {
-            val deptList: List<String> = addressInfoRepository.getDeptList()
-            for (i in deptList) {
-                var thisTurn = AddressInfoResponse(i.toString(), mutableListOf())
-                for (tmp in allAddressList) {
-                    if (i == tmp.department) {
-                        thisTurn.addressList.add(tmp)
-                    }
+            "dept" -> {
+                val groupedByDept = allAddressList.groupBy { it.department }
+                groupedByDept.map { (dept, addresses) ->
+                    AddressInfoResponse(dept, addresses.toMutableList())
                 }
-                returnAddressList.add(thisTurn)
             }
-
+            else -> throw BaseException(ErrorCode.INVALID_INPUT_VALUE)
         }
-
-        return returnAddressList
-
     }
 
     override fun searchAddressInfo(keyword: String, value: String): List<AddressInfoData> {
-        var returnAddressList : List<AddressInfoData> = mutableListOf()
-        if(keyword == "ip"){
-            returnAddressList = addressInfoRepository.findAllByIpAddress(value).map { it.toDto() }
+        return when (keyword) {
+            "ip" -> addressInfoRepository.findAllByIpAddress(value).map { it.toDto() }
+            "mac" -> addressInfoRepository.findAllByMac(value).map { it.toDto() }
+            "name" -> addressInfoRepository.findAllByName(value).map { it.toDto() }
+            else -> throw BaseException(ErrorCode.INVALID_INPUT_VALUE)
         }
-        else if(keyword == "mac"){
-            returnAddressList = addressInfoRepository.findAllByMac(value).map { it.toDto() }
-        }
-        else if(keyword == "name"){
-            returnAddressList = addressInfoRepository.findAllByName(value).map { it.toDto() }
-        }
-        return returnAddressList
     }
+
 
     override fun getRemainedAddress(): List<IpAddressData.IpAddressWithFloor> {
         val allUnusedAddressList : List<IpAddressData.IpAddressWithFloor> = ipAddressRepository.findByUnusedIp().map{
             it.toDto()
         }
-
         return allUnusedAddressList
 
     }
-
 
 }
