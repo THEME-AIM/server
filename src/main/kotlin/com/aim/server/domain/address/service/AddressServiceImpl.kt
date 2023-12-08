@@ -142,8 +142,8 @@ class AddressServiceImpl(
         return returnAddressList
     }
 
-    override fun getRemainedAddress(): List<IpAddressData> {
-        val allUnusedAddressList : List<IpAddressData> = ipAddressRepository.findByUnusedIp().map{
+    override fun getRemainedAddress(): List<IpAddressData.IpAddressWithFloor> {
+        val allUnusedAddressList : List<IpAddressData.IpAddressWithFloor> = ipAddressRepository.findByUnusedIp().map{
             it.toDto()
         }
 

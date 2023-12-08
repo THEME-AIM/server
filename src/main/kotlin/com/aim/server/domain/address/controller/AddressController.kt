@@ -89,7 +89,7 @@ class AddressController(
      */
     @GetMapping(value = ["/remained"])
     @ResponseStatus(value= HttpStatus.OK)
-    fun getRemainedIp() : List<IpAddressData>{
+    fun getRemainedIp() : List<IpAddressData.IpAddressWithFloor>{
         return addressService.getRemainedAddress()
     }
 

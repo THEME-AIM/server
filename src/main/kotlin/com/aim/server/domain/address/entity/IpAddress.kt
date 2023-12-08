@@ -34,10 +34,10 @@ data class IpAddress(
     var isAssigned: Boolean = false,
 
     ) {
-    fun toDto() : IpAddressData{
-        return IpAddressData(
-            ipAddress = ipAddress,
-            floor = floor
+    fun toDto() : IpAddressData.IpAddressWithFloor {
+        return IpAddressData.IpAddressWithFloor(
+            floor = floor,
+            ipAddress = ipAddress
         )
     }
 }

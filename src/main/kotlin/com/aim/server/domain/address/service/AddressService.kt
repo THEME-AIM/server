@@ -13,5 +13,5 @@ interface AddressService {
     fun getAddressInfo(type : String) :List<AddressInfoResponse>
     fun searchAddressInfo(keyword : String, value : String) : List<AddressInfoData>
 
-    fun getRemainedAddress() : List<IpAddressData>
+    fun getRemainedAddress() : List<IpAddressData.IpAddressWithFloor>
 }
