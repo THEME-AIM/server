@@ -19,5 +19,12 @@ enum class ErrorCode(
 
     // * 관리자 정보 관련 에러 처리
     CONFIG_NOT_FOUND(HttpStatus.NOT_FOUND, "입력하신 정보와 관련된 설정이 존재하지 않습니다. 다시 한번 확인해주세요."),
+
+
+    // IP 주소 관련 에러 처리
+
     MAC_ADDRESS_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 등록된 MAC 주소입니다."),
+    IP_ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "입력하신 정보와 관련된 IP 주소가 존재하지 않습니다. 다시 한번 확인해주세요."),
+    IP_ADDRESS_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 등록된 IP 주소입니다."),
+
 }
