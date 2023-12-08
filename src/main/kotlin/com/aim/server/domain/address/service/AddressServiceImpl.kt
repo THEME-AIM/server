@@ -41,11 +41,10 @@ class AddressServiceImpl(
 
         addressInfo.forEach {
             if (tmpList.contains(it.ipAddress)) {
-                try {
-                    addressInfoRepository.updateAddressInfo(it)
-                } catch (e: Exception) {
+                if(!addressInfoRepository.checkDuplicateMacAddress(it.macAddress).isEmpty) {
                     throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
                 }
+                addressInfoRepository.updateAddressInfo(it)
             } else {
                 this.insertAddressInfo(it)
             }
