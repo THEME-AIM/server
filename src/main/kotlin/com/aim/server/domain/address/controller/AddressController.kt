@@ -1,6 +1,8 @@
 package com.aim.server.domain.address.controller
 
 import com.aim.server.core.annotation.IsAuthenticated
+import com.aim.server.core.response.BaseResponse
+import com.aim.server.core.response.SuccessResponse
 import com.aim.server.domain.address.dto.AddressInfoData
 import com.aim.server.domain.address.dto.AddressInfoResponse
 import com.aim.server.domain.address.dto.IpAddressData
@@ -68,7 +70,6 @@ class AddressController(
     ) {
         return addressService.deleteAddressInfo(ipAddress)
     }
-
     /**
      * IP 리스트 확인
      * @param String: IP 주소
@@ -78,8 +79,8 @@ class AddressController(
     @ResponseStatus(value = HttpStatus.OK)
     fun getIpList(
         @RequestParam type : String,
-    ) : List<AddressInfoResponse>{
-        return addressService.getAddressInfo(type)
+    ) : BaseResponse<List<AddressInfoResponse>>{
+        return SuccessResponse.of(addressService.getAddressInfo(type))
     }
 
     /**
@@ -89,8 +90,8 @@ class AddressController(
      */
     @GetMapping(value = ["/remained"])
     @ResponseStatus(value= HttpStatus.OK)
-    fun getRemainedIp() : List<IpAddressData.IpAddressWithFloor>{
-        return addressService.getRemainedAddress()
+    fun getRemainedIp() : BaseResponse<List<IpAddressData.IpAddressWithFloor>>{
+        return SuccessResponse.of(addressService.getRemainedAddress())
     }
 
     /**
@@ -104,7 +105,8 @@ class AddressController(
     fun searchIp(
         @RequestParam keyword : String,
         @RequestParam  value : String
-    ) : List<AddressInfoData>{
-        return addressService.searchAddressInfo(keyword,value)
+    ) : BaseResponse<List<AddressInfoData>> {
+        return SuccessResponse.of(addressService.searchAddressInfo(keyword,value))
+
     }
 }
