@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,21 +28,21 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_DB: aim_test
-          POSTGRES_PASSWORD: vvip123!
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: vvip
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    #    services:
+    #      postgres:
+    #        image: postgres:latest
+    #        env:
+    #          POSTGRES_DB: aim_test
+    #          POSTGRES_PASSWORD: vvip123!
+    #          POSTGRES_PORT: 5432
+    #          POSTGRES_USER: vvip
+    #        ports:
+    #          - 5432:5432
+    #        options: >-
+    #          --health-cmd pg_isready
+    #          --health-interval 10s
+    #          --health-timeout 5s
+    #          --health-retries 5
     steps:
       - name: Checkout
         uses: actions/checkout@v4

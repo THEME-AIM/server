@@ -14,9 +14,11 @@ import org.springframework.restdocs.operation.preprocess.Preprocessors.modifyHea
 import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentation.documentationConfiguration
 import org.springframework.test.context.TestPropertySource
+import org.testcontainers.junit.jupiter.Testcontainers
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(RestDocumentationExtension::class)
+@Testcontainers
 @TestPropertySource("classpath:application-test.properties")
 abstract class AbstractControllerTest(
     private val port: Int
