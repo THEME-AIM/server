@@ -23,6 +23,40 @@ concurrency:
 
 jobs:
   # Single deploy job since we're just deploying
+  postgres-job:
+    # containers must run in Linux based operating systems
+    runs-on: ubuntu-latest
+    # Docker Hub image that `postgres-job` executes in
+    container: node:latest
+
+    # service containers to run with `postgres-job`
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: aim_test
+          POSTGRES_PASSWORD: vvip123!
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: vvip
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Install PostgreSQL client
+        run: |
+          apt-get update
+          apt-get install --yes postgresql-client
+
+      - name: Query database
+        run: psql -h postgres -d postgres_db -U postgres_user -c 'SELECT 1;'
+        env:
+          PGPASSWORD: vvip123!
+
   deploy:
     environment:
       name: github-pages
