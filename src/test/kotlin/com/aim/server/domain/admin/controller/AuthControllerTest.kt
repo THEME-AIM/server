@@ -8,6 +8,7 @@ import docs.*
 import docs.request.request
 import docs.request.requestBody
 import docs.response.baseResponseBody
+import docs.response.errorResponseBody
 import docs.response.response
 import docs.type.*
 import io.restassured.http.Method
@@ -59,16 +60,17 @@ class AuthControllerTest(
 
     @DisplayName("관리자 로그인: 비밀번호 오류")
     @Test
-    fun signInWith400() {
+    fun signInWith400WithId() {
         // * GIVEN: 잘못된 비밀번호 입력
         val body = SignInRequest(
-            DEFAULT_ADMIN_USERNAME_VALUE,
-            "WRONG_PASSWORD"
+            "WRONG_ID",
+            DEFAULT_ADMIN_PASSWORD_VALUE
+
         ).toJson()
 
         // * WHEN: 관리자 로그인 API 호출
         // * THEN: 400 BAD_REQUEST: 로그인 에러
-        this.spec.makeDocument(identifier = "admin/sign-in/400") {
+        this.spec.makeDocument(identifier = "admin/sign-in/400/id") {
             url = "/api/admin/sign-in"
             method = Method.POST
             statusCode = HttpStatus.BAD_REQUEST
@@ -80,9 +82,35 @@ class AuthControllerTest(
                 )
             }
             response {
-                responseBody = baseResponseBody(
-                    "errors" type LIST means "오류 목록",
+                responseBody = errorResponseBody()
+            }
+        }
+    }
+
+    @DisplayName("관리자 로그인: 비밀번호 오류")
+    @Test
+    fun signInWith400WithPassword() {
+        // * GIVEN: 잘못된 비밀번호 입력
+        val body = SignInRequest(
+            DEFAULT_ADMIN_USERNAME_VALUE,
+            "WRONG_PASSWORD"
+        ).toJson()
+
+        // * WHEN: 관리자 로그인 API 호출
+        // * THEN: 400 BAD_REQUEST: 로그인 에러
+        this.spec.makeDocument(identifier = "admin/sign-in/400/password") {
+            url = "/api/admin/sign-in"
+            method = Method.POST
+            statusCode = HttpStatus.BAD_REQUEST
+            requestBodyValue = body
+            request {
+                requestBody = requestBody(
+                    "username" type STRING means "관리자 아이디" require true,
+                    "password" type STRING means "관리자 비밀번호" require true,
                 )
+            }
+            response {
+                responseBody = errorResponseBody()
             }
         }
     }

@@ -572,7 +572,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/admin/sign-in HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:51313
+Host: localhost:59319
 Content-Length: 57
 
 {
@@ -601,7 +601,7 @@ Content-Length: 57
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Set-Cookie: JSESSIONID=16B232DC31CA8F67255AE30AAEAE904E; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=6632C1CFAC7F60279125DD724C6C4599; Path=/; HttpOnly
 X-Frame-Options: DENY
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -709,8 +709,8 @@ Content-Length: 76
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:51313
-Cookie: JSESSIONID=19FE9C749F332B36AE6B188B0F153916</code></pre>
+Host: localhost:59319
+Cookie: JSESSIONID=58D6BC550916245B4F4A274016092348</code></pre>
 </div>
 </div>
 </div>
@@ -741,7 +741,7 @@ Keep-Alive: timeout=60</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:51313</code></pre>
+Host: localhost:59319</code></pre>
 </div>
 </div>
 </div>
@@ -785,8 +785,8 @@ Host: localhost:51313</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/admin/config HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:51313
-Cookie: JSESSIONID=4E3E233978CB52EA2352D50E1323A6BC</code></pre>
+Host: localhost:59319
+Cookie: JSESSIONID=CA0DA4583E0EB9776AA99BCB433A0C84</code></pre>
 </div>
 </div>
 </div>
@@ -805,7 +805,7 @@ Cookie: JSESSIONID=4E3E233978CB52EA2352D50E1323A6BC</code></pre>
   }, {
     "id" : 2,
     "key" : "admin.password",
-    "value" : "$2a$10$SUqvhNp94ezbXeHXXZ22bO6YqDw7L/iSNWqe9gBBsjHk7KtSfnh6a"
+    "value" : "$2a$10$9b1kbnsihAp6aFbM58YG5OM9mufwUJdJcddhJ9QDMCJJqQLIchqy."
   }, {
     "id" : 3,
     "key" : "admin.floor_start_ip_address_01F",
@@ -849,9 +849,9 @@ Cookie: JSESSIONID=4E3E233978CB52EA2352D50E1323A6BC</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/admin/config HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:51313
+Host: localhost:59319
 Content-Length: 159
-Cookie: JSESSIONID=0C5F7F16FFBE85C0EA7D8C806B63BD8C
+Cookie: JSESSIONID=FCA121C134AA4FE82CDB279957B3E522
 
 {
   "keys" : [ {
@@ -962,9 +962,9 @@ Cookie: JSESSIONID=0C5F7F16FFBE85C0EA7D8C806B63BD8C
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/admin/floor HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:51313
+Host: localhost:59319
 Content-Length: 216
-Cookie: JSESSIONID=9BAB47C4555A7837B6FBB79D34914BA6
+Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
 
 {
   "floors" : [ {
@@ -1058,23 +1058,23 @@ Cookie: JSESSIONID=9BAB47C4555A7837B6FBB79D34914BA6
   "errors" : [ {
     "field" : "floors[0].endIpAddress",
     "value" : "",
+    "code" : "NotBlank",
+    "message" : "공백일 수 없습니다"
+  }, {
+    "field" : "floors[0].startIpAddress",
+    "value" : "",
     "code" : "IPv4",
     "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].startIpAddress",
+    "value" : "",
+    "code" : "NotBlank",
+    "message" : "공백일 수 없습니다"
   }, {
     "field" : "floors[0].endIpAddress",
     "value" : "",
-    "code" : "NotBlank",
-    "message" : "공백일 수 없습니다"
-  }, {
-    "field" : "floors[0].startIpAddress",
-    "value" : "",
     "code" : "IPv4",
     "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
-  }, {
-    "field" : "floors[0].startIpAddress",
-    "value" : "",
-    "code" : "NotBlank",
-    "message" : "공백일 수 없습니다"
   } ]
 }</code></pre>
 </div>

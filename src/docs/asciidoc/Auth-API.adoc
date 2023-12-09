@@ -11,9 +11,13 @@ operation::admin/sign-in/200[snippets='http-request,request-body,http-response,r
 [[Auth-Login-Error]]
 === 로그인 요청 오류 케이스 정리
 
-[.red]#로그인 요청 정보(username, password)가 올바르지 않은 경우 에러가 발생한다.#
+[.red]#로그인 요청 아이디가 올바르지 않은 경우 에러가 발생한다.#
 
-operation::admin/sign-in/400[snippets='request-body,response-body']
+operation::admin/sign-in/400/id[snippets='request-body,response-body']
+
+[.red]#로그인 요청 비밀번호가 올바르지 않은 경우 에러가 발생한다.#
+
+operation::admin/sign-in/400/password[snippets='request-body,response-body']
 
 [.red]#만약, 이미 로그인한 사용자가 로그인을 시도할 경우 에러가 발생한다.#
 

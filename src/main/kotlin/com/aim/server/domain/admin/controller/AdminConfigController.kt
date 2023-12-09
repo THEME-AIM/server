@@ -31,6 +31,7 @@ class AdminConfigController(
     fun signIn(
         request: HttpServletRequest,
         @RequestBody signIn: SignInRequest,
+        errors: Errors
     ): SuccessResponse<Unit> {
         // session을 조회하여 이미 로그인 되어있는지 확인
         val session = request.session.getAttribute(LOGIN_SESSION)
@@ -39,8 +40,11 @@ class AdminConfigController(
         }
 
         // 로그인 정보를 통해 관리자 로그인
-        adminConfigService.signIn(signIn)
+        adminConfigService.signIn(signIn = signIn, errors = errors)
 
+        if (errors.hasErrors()) {
+            throw BaseException(ErrorCode.INVALID_ID_OR_PASSWORD, errors)
+        }
 
         // 로그인 성공 시 세션에 로그인 정보 저장
         request.session.setAttribute(LOGIN_SESSION, true)
@@ -60,11 +64,12 @@ class AdminConfigController(
         val session = request.session.getAttribute(LOGIN_SESSION)
         log.debug { "session: $session" }
         if (session == null || !(session as Boolean)) {
+            request.session
             throw BaseException(ErrorCode.USER_NOT_LOGGED_IN)
         }
 
         // 로그아웃 성공 시 세션에 로그인 정보 삭제
-        request.session.setAttribute(LOGIN_SESSION, false)
+        request.session.removeAttribute(LOGIN_SESSION)
         return SuccessResponse.empty()
     }
 
