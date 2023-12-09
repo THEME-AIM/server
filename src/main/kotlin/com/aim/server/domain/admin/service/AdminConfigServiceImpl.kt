@@ -18,6 +18,7 @@ import jakarta.annotation.PostConstruct
 import jakarta.transaction.Transactional
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.validation.Errors
 
 
 @Service
@@ -55,8 +56,7 @@ class AdminConfigServiceImpl(
      * 관리자 로그인 정보를 바탕으로 로그인을 진행함. 예외 발생 시 로그인 실패
      * @param signIn: SignInRequest: 관리자 로그인 정보 (ID / Password)
      */
-    override fun signIn(signIn: SignInRequest) {
-
+    override fun signIn(signIn: SignInRequest, errors: Errors) {
         val username = adminConfigRepository.findValueByKey(ADMIN_USERNAME_KEY).orElseThrow {
             BaseException(ErrorCode.INVALID_ID_OR_PASSWORD)
         }
@@ -66,9 +66,12 @@ class AdminConfigServiceImpl(
 
         log.debug { "로그인 요청: username: ${signIn.username}, password: ${signIn.password} findUsername: $username, findPassword: $password" }
 
-        if (username != signIn.username || !passwordEncoder.matches(signIn.password, password)) {
-            log.error { "Invalid username or password" }
-            throw BaseException(ErrorCode.USER_NOT_MATCHED)
+        if (username.isEmpty() || username != signIn.username) {
+            errors.rejectValue("username", "invalid", "ID가 일치하지 않습니다.")
+        }
+
+        if (password.isEmpty() || !passwordEncoder.matches(signIn.password, password)) {
+            errors.rejectValue("password", "invalid", "비밀번호가 일치하지 않습니다.")
         }
     }
 
