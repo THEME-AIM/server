@@ -1,5 +1,6 @@
 package com.aim.server.domain.admin.repository
 
+import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.entity.QAdminConfig.adminConfig
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.stereotype.Repository
@@ -17,5 +18,12 @@ class AdminConfigQueryRepositoryImpl(
                 .where(adminConfig.key.eq(key))
                 .fetchOne()
         )
+    }
+
+    override fun findAllAdminKeys(): List<AdminConfig> {
+        return queryFactory
+            .selectFrom(adminConfig)
+            .where(adminConfig.key.notIn("username", "password"))
+            .fetch()
     }
 }
