@@ -79,7 +79,7 @@ class AdminConfigServiceImpl(
      * 관리자 설정 전체 조회
      * @return List<ConfigData>: 관리자 설정 리스트
      */
-    override fun getAdminConfigs(): List<APIResponse> = adminConfigRepository.findAll().map { it.toResponse() }
+    override fun getAdminConfigs(): List<APIResponse> = adminConfigRepository.findAllAdminKeys().map { it.toResponse() }
 
     /**
      * 관리자 설정 수정 혹은 추가
@@ -140,8 +140,8 @@ class AdminConfigServiceImpl(
     private fun List<FloorKeys>.toAdminKeys(): List<AdminKeys> {
         val adminKeys = mutableListOf<AdminKeys>()
         this.forEach {
-            adminKeys.add(AdminKeys(key = "${FLOOR_PREFIX}start_ip_address_0${it.floor}F", value = it.startIpAddress))
-            adminKeys.add(AdminKeys(key = "${FLOOR_PREFIX}end_ip_address_0${it.floor}F", value = it.endIpAddress))
+            adminKeys.add(AdminKeys(key = "${FLOOR_PREFIX}start_ip_address_${it.floor}F", value = it.startIpAddress))
+            adminKeys.add(AdminKeys(key = "${FLOOR_PREFIX}end_ip_address_${it.floor}F", value = it.endIpAddress))
         }
         return adminKeys
     }

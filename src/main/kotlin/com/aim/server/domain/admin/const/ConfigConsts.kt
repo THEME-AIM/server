@@ -3,7 +3,7 @@ package com.aim.server.domain.admin.const
 class ConfigConsts {
     companion object {
         const val LOGIN_SESSION = "login_session"
-        private const val ADMIN_CONFIG_PREFIX = "admin."
+        private const val ADMIN_CONFIG_PREFIX = "admin_"
         const val ADMIN_USERNAME_KEY = ADMIN_CONFIG_PREFIX + "username"
         const val ADMIN_PASSWORD_KEY = ADMIN_CONFIG_PREFIX + "password"
         const val START_IP_ADDRESS_KEY = ADMIN_CONFIG_PREFIX + "start_ip_address"

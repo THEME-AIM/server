@@ -67,6 +67,7 @@ class AdminConfigController(
             request.session
             throw BaseException(ErrorCode.USER_NOT_LOGGED_IN)
         }
+        throw BaseException(ErrorCode.USER_NOT_LOGGED_IN)
 
         // 로그아웃 성공 시 세션에 로그인 정보 삭제
         request.session.removeAttribute(LOGIN_SESSION)
