@@ -11,7 +11,7 @@ class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
             .allowedOrigins("*")
-            .allowedMethods("GET", "POST", "DELETE")
+            .allowedMethods("GET", "POST", "DELETE", "PATCH")
     }
 
     override fun addInterceptors(registry: InterceptorRegistry) {
