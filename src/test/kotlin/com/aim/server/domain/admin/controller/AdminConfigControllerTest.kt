@@ -61,13 +61,25 @@ class AdminConfigControllerTest(
         val keyAPIRequest = KeyAPIRequest(
             keys = listOf(
                 AdminKeys(
-                    key = "admin_startIpAddress",
+                    key = "admin_start_ip_ddress",
                     value = "192.168.0.1"
                 ),
                 AdminKeys(
-                    key = "admin.endIpAddress",
+                    key = "admin_end_ip_ddress",
                     value = "192.168.0.100"
-                )
+                ),
+                AdminKeys(
+                    key = "admin_gateway_ip_address",
+                    value = "192.168.0.255"
+                ),
+                AdminKeys(
+                    key = "admin_subnet_mask_key",
+                    value = "24"
+                ),
+                AdminKeys(
+                    key = "admin_default_dns_address",
+                    value = "8.8.8.8"
+                ),
             )
         ).toJson()
 
