@@ -152,7 +152,6 @@ class AuthControllerTest(
     fun signOutWith200() {
         // * GIVEN: 로그인된 세션 ID
         val sessionId = getSessionId()
-        print(sessionId)
         // * WHEN: 관리자 로그인 API 호출
         // * THEN: 200 OK: 정상로그인 완료
         this.spec.makeDocument(identifier = "admin/sign-out/200") {
