@@ -464,7 +464,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/admin/sign-in HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
+Host: localhost:55895
 Content-Length: 57
 
 {
@@ -493,7 +493,7 @@ Content-Length: 57
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Set-Cookie: JSESSIONID=6632C1CFAC7F60279125DD724C6C4599; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=A32138B12B9D51D83A2DE91506CA8B42; Path=/; HttpOnly
 X-Frame-Options: DENY
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -526,7 +526,39 @@ Content-Length: 76
 <div class="sect2">
 <h3 id="Auth-Login-Error">로그인 요청 오류 케이스 정리</h3>
 <div class="paragraph">
-<p><span class="red">로그인 요청 정보(username, password)가 올바르지 않은 경우 에러가 발생한다.</span></p>
+<p><span class="red">로그인 요청 아이디가 올바르지 않은 경우 에러가 발생한다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Auth-Login-Error_request_body">Request body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "username" : "WRONG_ID",
+  "password" : "password123!"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Auth-Login-Error_response_body">Response body</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code class="language-json" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "아이디 또는 비밀번호가 일치하지 않습니다.",
+  "errors" : [ {
+    "field" : "username",
+    "value" : "WRONG_ID",
+    "code" : "invalid",
+    "message" : "ID가 일치하지 않습니다."
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="red">로그인 요청 비밀번호가 올바르지 않은 경우 에러가 발생한다.</span></p>
 </div>
 <div class="sect3">
 <h4 id="Auth-Login-Error_request_body">Request body</h4>
@@ -546,8 +578,13 @@ Content-Length: 76
 <pre class="highlight nowrap"><code class="language-json" data-lang="json">{
   "isSuccess" : false,
   "code" : 400,
-  "message" : "유저 정보가 일치하지 않습니다.",
-  "errors" : [ ]
+  "message" : "아이디 또는 비밀번호가 일치하지 않습니다.",
+  "errors" : [ {
+    "field" : "password",
+    "value" : "WRONG_PASSWORD",
+    "code" : "invalid",
+    "message" : "비밀번호가 일치하지 않습니다."
+  } ]
 }</code></pre>
 </div>
 </div>
@@ -601,8 +638,8 @@ Content-Length: 76
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
-Cookie: JSESSIONID=58D6BC550916245B4F4A274016092348</code></pre>
+Host: localhost:55895
+Cookie: JSESSIONID=3A21D6D849DC33F7FF0E060CF9CBEF31</code></pre>
 </div>
 </div>
 </div>
@@ -633,7 +670,7 @@ Keep-Alive: timeout=60</code></pre>
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319</code></pre>
+Host: localhost:55895</code></pre>
 </div>
 </div>
 </div>
@@ -657,7 +694,7 @@ Host: localhost:59319</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-12-08 01:50:14 +0900
+Last updated 2023-12-09 16:29:41 +0900
 </div>
 </div>
 </body>

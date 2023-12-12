@@ -464,8 +464,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/admin/config HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
-Cookie: JSESSIONID=CA0DA4583E0EB9776AA99BCB433A0C84</code></pre>
+Host: localhost:55895
+Cookie: JSESSIONID=B8262CA0BC0F4C1423BE3E23EAEE2BC5</code></pre>
 </div>
 </div>
 </div>
@@ -479,27 +479,27 @@ Cookie: JSESSIONID=CA0DA4583E0EB9776AA99BCB433A0C84</code></pre>
   "message" : "OK",
   "data" : [ {
     "id" : 1,
-    "key" : "admin.username",
+    "key" : "admin_username",
     "value" : "admin"
   }, {
     "id" : 2,
-    "key" : "admin.password",
-    "value" : "$2a$10$9b1kbnsihAp6aFbM58YG5OM9mufwUJdJcddhJ9QDMCJJqQLIchqy."
+    "key" : "admin_password",
+    "value" : "$2a$10$cm4NEA/abXe.htrLy4aOeO4c4mZJ9UhfQuxkAh1y.RhIBmcU6tG3C"
   }, {
     "id" : 3,
-    "key" : "admin.floor_start_ip_address_01F",
+    "key" : "admin_floor_start_ip_address_1F",
     "value" : "192.168.0.1"
   }, {
     "id" : 4,
-    "key" : "admin.floor_end_ip_address_01F",
+    "key" : "admin_floor_end_ip_address_1F",
     "value" : "192.168.0.10"
   }, {
     "id" : 5,
-    "key" : "admin.floor_start_ip_address_02F",
+    "key" : "admin_floor_start_ip_address_2F",
     "value" : "192.168.0.11"
   }, {
     "id" : 6,
-    "key" : "admin.floor_end_ip_address_02F",
+    "key" : "admin_floor_end_ip_address_2F",
     "value" : "192.168.0.20"
   } ]
 }</code></pre>
@@ -528,9 +528,9 @@ Cookie: JSESSIONID=CA0DA4583E0EB9776AA99BCB433A0C84</code></pre>
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/admin/config HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
+Host: localhost:55895
 Content-Length: 159
-Cookie: JSESSIONID=FCA121C134AA4FE82CDB279957B3E522
+Cookie: JSESSIONID=15EFCA5A43A09D81E57D31CBDB5C41CE
 
 {
   "keys" : [ {
@@ -641,9 +641,9 @@ Cookie: JSESSIONID=FCA121C134AA4FE82CDB279957B3E522
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/admin/floor HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
+Host: localhost:55895
 Content-Length: 216
-Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
+Cookie: JSESSIONID=3225FB32EC9472A86BB347AA732CD329
 
 {
   "floors" : [ {
@@ -687,19 +687,19 @@ Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
   "message" : "OK",
   "data" : [ {
     "id" : 3,
-    "key" : "admin.floor_start_ip_address_01F",
+    "key" : "admin_floor_start_ip_address_1F",
     "value" : "192.168.0.1"
   }, {
     "id" : 4,
-    "key" : "admin.floor_end_ip_address_01F",
+    "key" : "admin_floor_end_ip_address_1F",
     "value" : "192.168.0.10"
   }, {
     "id" : 5,
-    "key" : "admin.floor_start_ip_address_02F",
+    "key" : "admin_floor_start_ip_address_2F",
     "value" : "192.168.0.11"
   }, {
     "id" : 6,
-    "key" : "admin.floor_end_ip_address_02F",
+    "key" : "admin_floor_end_ip_address_2F",
     "value" : "192.168.0.20"
   } ]
 }</code></pre>
@@ -735,16 +735,6 @@ Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
   "code" : 400,
   "message" : "입력한 값이 올바르지 않습니다.",
   "errors" : [ {
-    "field" : "floors[0].endIpAddress",
-    "value" : "",
-    "code" : "NotBlank",
-    "message" : "공백일 수 없습니다"
-  }, {
-    "field" : "floors[0].startIpAddress",
-    "value" : "",
-    "code" : "IPv4",
-    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
-  }, {
     "field" : "floors[0].startIpAddress",
     "value" : "",
     "code" : "NotBlank",
@@ -754,6 +744,16 @@ Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
     "value" : "",
     "code" : "IPv4",
     "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].startIpAddress",
+    "value" : "",
+    "code" : "IPv4",
+    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].endIpAddress",
+    "value" : "",
+    "code" : "NotBlank",
+    "message" : "공백일 수 없습니다"
   } ]
 }</code></pre>
 </div>

@@ -61,7 +61,7 @@ class AdminConfigControllerTest(
         val keyAPIRequest = KeyAPIRequest(
             keys = listOf(
                 AdminKeys(
-                    key = "admin.startIpAddress",
+                    key = "admin_startIpAddress",
                     value = "192.168.0.1"
                 ),
                 AdminKeys(

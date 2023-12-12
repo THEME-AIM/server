@@ -572,7 +572,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/admin/sign-in HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
+Host: localhost:55895
 Content-Length: 57
 
 {
@@ -601,7 +601,7 @@ Content-Length: 57
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Set-Cookie: JSESSIONID=6632C1CFAC7F60279125DD724C6C4599; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=A32138B12B9D51D83A2DE91506CA8B42; Path=/; HttpOnly
 X-Frame-Options: DENY
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -634,7 +634,39 @@ Content-Length: 76
 <div class="sect2">
 <h3 id="Auth-Login-Error"><a class="link" href="#Auth-Login-Error">로그인 요청 오류 케이스 정리</a></h3>
 <div class="paragraph">
-<p><span class="red">로그인 요청 정보(username, password)가 올바르지 않은 경우 에러가 발생한다.</span></p>
+<p><span class="red">로그인 요청 아이디가 올바르지 않은 경우 에러가 발생한다.</span></p>
+</div>
+<div class="sect3">
+<h4 id="Auth-Login-Error_request_body"><a class="link" href="#Auth-Login-Error_request_body">Request body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "username" : "WRONG_ID",
+  "password" : "password123!"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="Auth-Login-Error_response_body"><a class="link" href="#Auth-Login-Error_response_body">Response body</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
+  "isSuccess" : false,
+  "code" : 400,
+  "message" : "아이디 또는 비밀번호가 일치하지 않습니다.",
+  "errors" : [ {
+    "field" : "username",
+    "value" : "WRONG_ID",
+    "code" : "invalid",
+    "message" : "ID가 일치하지 않습니다."
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="red">로그인 요청 비밀번호가 올바르지 않은 경우 에러가 발생한다.</span></p>
 </div>
 <div class="sect3">
 <h4 id="Auth-Login-Error_request_body"><a class="link" href="#Auth-Login-Error_request_body">Request body</a></h4>
@@ -654,8 +686,13 @@ Content-Length: 76
 <pre class="highlightjs highlight nowrap"><code class="language-json hljs" data-lang="json">{
   "isSuccess" : false,
   "code" : 400,
-  "message" : "유저 정보가 일치하지 않습니다.",
-  "errors" : [ ]
+  "message" : "아이디 또는 비밀번호가 일치하지 않습니다.",
+  "errors" : [ {
+    "field" : "password",
+    "value" : "WRONG_PASSWORD",
+    "code" : "invalid",
+    "message" : "비밀번호가 일치하지 않습니다."
+  } ]
 }</code></pre>
 </div>
 </div>
@@ -709,8 +746,8 @@ Content-Length: 76
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
-Cookie: JSESSIONID=58D6BC550916245B4F4A274016092348</code></pre>
+Host: localhost:55895
+Cookie: JSESSIONID=3A21D6D849DC33F7FF0E060CF9CBEF31</code></pre>
 </div>
 </div>
 </div>
@@ -741,7 +778,7 @@ Keep-Alive: timeout=60</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/admin/sign-out HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319</code></pre>
+Host: localhost:55895</code></pre>
 </div>
 </div>
 </div>
@@ -785,8 +822,8 @@ Host: localhost:59319</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/admin/config HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
-Cookie: JSESSIONID=CA0DA4583E0EB9776AA99BCB433A0C84</code></pre>
+Host: localhost:55895
+Cookie: JSESSIONID=B8262CA0BC0F4C1423BE3E23EAEE2BC5</code></pre>
 </div>
 </div>
 </div>
@@ -800,27 +837,27 @@ Cookie: JSESSIONID=CA0DA4583E0EB9776AA99BCB433A0C84</code></pre>
   "message" : "OK",
   "data" : [ {
     "id" : 1,
-    "key" : "admin.username",
+    "key" : "admin_username",
     "value" : "admin"
   }, {
     "id" : 2,
-    "key" : "admin.password",
-    "value" : "$2a$10$9b1kbnsihAp6aFbM58YG5OM9mufwUJdJcddhJ9QDMCJJqQLIchqy."
+    "key" : "admin_password",
+    "value" : "$2a$10$cm4NEA/abXe.htrLy4aOeO4c4mZJ9UhfQuxkAh1y.RhIBmcU6tG3C"
   }, {
     "id" : 3,
-    "key" : "admin.floor_start_ip_address_01F",
+    "key" : "admin_floor_start_ip_address_1F",
     "value" : "192.168.0.1"
   }, {
     "id" : 4,
-    "key" : "admin.floor_end_ip_address_01F",
+    "key" : "admin_floor_end_ip_address_1F",
     "value" : "192.168.0.10"
   }, {
     "id" : 5,
-    "key" : "admin.floor_start_ip_address_02F",
+    "key" : "admin_floor_start_ip_address_2F",
     "value" : "192.168.0.11"
   }, {
     "id" : 6,
-    "key" : "admin.floor_end_ip_address_02F",
+    "key" : "admin_floor_end_ip_address_2F",
     "value" : "192.168.0.20"
   } ]
 }</code></pre>
@@ -849,9 +886,9 @@ Cookie: JSESSIONID=CA0DA4583E0EB9776AA99BCB433A0C84</code></pre>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/admin/config HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
+Host: localhost:55895
 Content-Length: 159
-Cookie: JSESSIONID=FCA121C134AA4FE82CDB279957B3E522
+Cookie: JSESSIONID=15EFCA5A43A09D81E57D31CBDB5C41CE
 
 {
   "keys" : [ {
@@ -962,9 +999,9 @@ Cookie: JSESSIONID=FCA121C134AA4FE82CDB279957B3E522
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/admin/floor HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Host: localhost:59319
+Host: localhost:55895
 Content-Length: 216
-Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
+Cookie: JSESSIONID=3225FB32EC9472A86BB347AA732CD329
 
 {
   "floors" : [ {
@@ -1008,19 +1045,19 @@ Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
   "message" : "OK",
   "data" : [ {
     "id" : 3,
-    "key" : "admin.floor_start_ip_address_01F",
+    "key" : "admin_floor_start_ip_address_1F",
     "value" : "192.168.0.1"
   }, {
     "id" : 4,
-    "key" : "admin.floor_end_ip_address_01F",
+    "key" : "admin_floor_end_ip_address_1F",
     "value" : "192.168.0.10"
   }, {
     "id" : 5,
-    "key" : "admin.floor_start_ip_address_02F",
+    "key" : "admin_floor_start_ip_address_2F",
     "value" : "192.168.0.11"
   }, {
     "id" : 6,
-    "key" : "admin.floor_end_ip_address_02F",
+    "key" : "admin_floor_end_ip_address_2F",
     "value" : "192.168.0.20"
   } ]
 }</code></pre>
@@ -1056,16 +1093,6 @@ Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
   "code" : 400,
   "message" : "입력한 값이 올바르지 않습니다.",
   "errors" : [ {
-    "field" : "floors[0].endIpAddress",
-    "value" : "",
-    "code" : "NotBlank",
-    "message" : "공백일 수 없습니다"
-  }, {
-    "field" : "floors[0].startIpAddress",
-    "value" : "",
-    "code" : "IPv4",
-    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
-  }, {
     "field" : "floors[0].startIpAddress",
     "value" : "",
     "code" : "NotBlank",
@@ -1075,6 +1102,16 @@ Cookie: JSESSIONID=8FC72DE8CB45FCB22B6BB2E5E568AD44
     "value" : "",
     "code" : "IPv4",
     "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].startIpAddress",
+    "value" : "",
+    "code" : "IPv4",
+    "message" : "정상적인 IP주소가 아닙니다. 다시 한번 확인해주세요."
+  }, {
+    "field" : "floors[0].endIpAddress",
+    "value" : "",
+    "code" : "NotBlank",
+    "message" : "공백일 수 없습니다"
   } ]
 }</code></pre>
 </div>
