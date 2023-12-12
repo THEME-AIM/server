@@ -1,6 +1,5 @@
 package com.aim.server.domain.admin.controller
 
-import com.aim.server.core.annotation.IsAuthenticated
 import com.aim.server.core.exception.BaseException
 import com.aim.server.core.exception.ErrorCode
 import com.aim.server.core.response.BaseResponse
@@ -90,7 +89,6 @@ class AdminConfigController(
      */
     @PatchMapping(value = ["/config"])
     @ResponseStatus(value = HttpStatus.OK)
-//    @IsAuthenticated
     fun upsertAdminConfigs(
         @RequestBody @Validated configs: KeyAPIRequest,
         errors: Errors
@@ -103,7 +101,6 @@ class AdminConfigController(
 
     @PostMapping(value = ["/floor"])
     @ResponseStatus(value = HttpStatus.OK)
-    @IsAuthenticated
     fun upsertFloors(
         @RequestBody @Validated floors: FloorAPIRequest,
         errors: Errors
