@@ -1,5 +1,7 @@
 package com.aim.server.domain.admin.repository
 
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_PASSWORD_KEY
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_USERNAME_KEY
 import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.entity.QAdminConfig.adminConfig
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -23,7 +25,7 @@ class AdminConfigQueryRepositoryImpl(
     override fun findAllAdminKeys(): List<AdminConfig> {
         return queryFactory
             .selectFrom(adminConfig)
-            .where(adminConfig.key.notIn("username", "password"))
+            .where(adminConfig.key.notIn(ADMIN_USERNAME_KEY, ADMIN_PASSWORD_KEY))
             .fetch()
     }
 }
