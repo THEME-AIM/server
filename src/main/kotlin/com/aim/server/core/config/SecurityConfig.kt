@@ -28,7 +28,6 @@ class SecurityConfig {
             .authorizeHttpRequests {
                 it.anyRequest().permitAll()
             }
-            .sessionManagement { it.disable() }
             .formLogin { it.disable() }
             .build()
     }
@@ -39,7 +38,7 @@ class SecurityConfig {
         configuration.allowedOrigins = listOf(
             "http://localhost:3000",
         )
-        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
+        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PATCH")
         configuration.allowedHeaders =
             listOf("Origin", "X-Requested-With", "Content-Type", "Authorization", "Oauth-Token")
         configuration.maxAge = 3000L
