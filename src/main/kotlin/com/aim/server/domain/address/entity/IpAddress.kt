@@ -27,6 +27,12 @@ data class IpAddress(
     @Column(name = "ip_address")
     var ipAddress: String,
 
+    @Column(name = "network_name", nullable = false)
+    val networkName: String,
+
+    @Column(name = "subnet_name", nullable = false)
+    val subnetName: String,
+
     @Column(name = "floor", nullable = true)
     var floor: Int,
 
@@ -34,7 +40,7 @@ data class IpAddress(
     var isAssigned: Boolean = false,
 
     ) {
-    fun toDto() : IpAddressData.IpAddressWithFloor {
+    fun toDto(): IpAddressData.IpAddressWithFloor {
         return IpAddressData.IpAddressWithFloor(
             floor = floor,
             ipAddress = ipAddress

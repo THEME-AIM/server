@@ -28,7 +28,6 @@ class SecurityConfig {
             .authorizeHttpRequests {
                 it.anyRequest().permitAll()
             }
-            .sessionManagement { it.disable() }
             .formLogin { it.disable() }
             .build()
     }

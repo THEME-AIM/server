@@ -10,8 +10,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
-            .allowedMethods("GET", "POST", "DELETE", "PATCH")
+            .allowedOrigins("http://localhost:3000")
+            .allowCredentials(true)
+            .allowedMethods("GET", "POST", "DELETE", "PATCH", "PUT")
     }
 
     override fun addInterceptors(registry: InterceptorRegistry) {

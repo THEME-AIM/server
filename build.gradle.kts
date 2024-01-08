@@ -68,6 +68,9 @@ dependencies {
     implementation("org.springframework.restdocs:spring-restdocs-restassured")
     testImplementation("com.natpryce:konfig:1.6.10.0")
 
+    // Openstack
+    implementation("org.pacesys:openstack4j:3.1.0")
+
     // KoTest
     testImplementation("io.kotest:kotest-assertions-core:5.5.5")
     testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
