@@ -78,6 +78,7 @@ class CustomServerServiceImpl(
         }
     }
 
+
     override fun startServer(serverName: String) {
         val findServer = customServerRepository.findCustomServerByServerName(serverName).orElseThrow {
             throw Exception("존재하지 않는 서버입니다.")

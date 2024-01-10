@@ -7,4 +7,6 @@ interface OpenStackNetworkService {
     fun deleteNetwork(networkName: String)
     fun getNetork(networkName: String): Network
     fun getNetworkList(): List<Network>
+    fun createServer1(projectId: Long, username: String)
+    fun createServer2(projectId: Long, username: String)
 }

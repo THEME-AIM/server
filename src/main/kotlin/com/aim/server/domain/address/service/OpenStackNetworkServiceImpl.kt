@@ -5,6 +5,8 @@ import org.openstack4j.api.Builders
 import org.openstack4j.api.OSClient.OSClientV3
 import org.openstack4j.api.exceptions.AuthenticationException
 import org.openstack4j.model.common.Identifier
+import org.openstack4j.model.compute.BDMDestType
+import org.openstack4j.model.compute.BDMSourceType
 import org.openstack4j.model.network.AttachInterfaceType
 import org.openstack4j.model.network.IPVersionType
 import org.openstack4j.model.network.Network
@@ -109,5 +111,41 @@ class OpenStackNetworkServiceImpl(
 
     private fun getSubnetList(): List<Subnet> {
         return osAuthToken().networking().subnet().list()
+    }
+
+    override fun createServer1(projectId: Long, username: String) {
+        val serverName = "server-$username-$projectId"
+        val createServer = Builders.server()
+            .name(serverName)
+            .flavor(1.toString())
+            .image("68861bc8-621f-4475-852d-ff7a39bc881f")
+            .addPersonality("/etc/motd", "Welcome to the AIM Cloud")
+            .blockDevice(
+                Builders.blockDeviceMapping().uuid("68861bc8-621f-4475-852d-ff7a39bc881f")
+                    .sourceType(BDMSourceType.IMAGE)
+                    .volumeSize(1).deviceName("/dev/vda").bootIndex(0).destinationType(BDMDestType.LOCAL)
+                    .deleteOnTermination(true).build()
+            ).build()
+        createServer.addNetwork("test", "192.168.0.1")
+        createServer.addNetworkPort("")
+        osAuthToken().compute().servers().boot(createServer)
+    }
+
+    override fun createServer2(projectId: Long, username: String) {
+        val serverName = "server-$username-$projectId"
+        val createServer = Builders.server()
+            .name(serverName)
+            .flavor(1.toString())
+            .image("68861bc8-621f-4475-852d-ff7a39bc881f")
+            .addPersonality("/etc/motd", "Welcome to the AIM Cloud")
+            .blockDevice(
+                Builders.blockDeviceMapping().uuid("68861bc8-621f-4475-852d-ff7a39bc881f")
+                    .sourceType(BDMSourceType.IMAGE)
+                    .volumeSize(1).deviceName("/dev/vda").bootIndex(0).destinationType(BDMDestType.LOCAL)
+                    .deleteOnTermination(true).build()
+            ).build()
+        createServer.addNetwork("test", "192.168.0.1")
+        createServer.addNetworkPort("")
+        osAuthToken().compute().servers().boot(createServer)
     }
 }
