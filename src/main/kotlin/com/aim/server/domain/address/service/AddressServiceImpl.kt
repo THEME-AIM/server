@@ -20,30 +20,12 @@ class AddressServiceImpl(
     private val ipAddressRepository: IpAddressRepository,
     private val adminConfigRepository: AdminConfigRepository
 ) : AddressService {
+
     @Transactional
     override fun upsertAddressInfo(addressInfo: List<AddressInfoData>) {
         val matchedAddressInfo = addressInfoRepository.findByIpAddress(addressInfo.map { it.ipAddress })
-
         val tmpList = matchedAddressInfo.map { it.ipAddress.ipAddress }.toList()
-
         addressInfoRepository.setAttributeEmpty(tmpList)
-
-        //TODO: 왜 아래 코드는 update가 제대로 일어나지 않는가
-
-//        addressInfo.map {
-//            matchedAddressInfo.find { matchedAddressInfo ->
-//                matchedAddressInfo.ipAddress.ipAddress == it.ipAddress
-//            }?.apply {
-//                this.macAddress = it.macAddress
-//                this.department = it.department
-//                this.ipAddress.floor = it.floor
-//                this.name = it.name
-//                this.isComputer = it.isComputer
-//            } ?: run {
-//                this.insertAddressInfo(it)
-//            }
-//        }
-
         addressInfo.forEach {
             if (tmpList.contains(it.ipAddress)) {
                 if(!addressInfoRepository.checkDuplicateMacAddress(it.macAddress).isEmpty) {

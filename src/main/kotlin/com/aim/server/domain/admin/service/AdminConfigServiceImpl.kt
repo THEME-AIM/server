@@ -109,6 +109,7 @@ class AdminConfigServiceImpl(
         val usedIpAddresses = mutableSetOf<String>()
         configs.forEach {
             val ipAddresses = FloorKeys.betweenIpAddress(it.startIpAddress, it.endIpAddress)
+            // TODO: IP 기반으로 openStackService를 사용해 Network와 Subnet 생성
             ipAddressRepository.updateIpAddressFloor(
                 it.floor,
                 findIpAddressWithFloor.filter { ipAddress ->

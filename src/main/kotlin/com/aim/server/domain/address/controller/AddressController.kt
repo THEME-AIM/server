@@ -30,33 +30,6 @@ class AddressController(
         return addressService.insertAddressInfo(addressInfo)
     }
 
-    @GetMapping(value = ["/test"])
-    @ResponseBody
-    fun test(): Any {
-        println("run test1")
-        val test = openStackNetworkService.createNetwork("test", "192.168.0")
-        println("run test2")
-        return test
-    }
-
-    @GetMapping(value = ["/test2"])
-    @ResponseBody
-    fun test2(): Any {
-        println("run test1")
-        val test = openStackNetworkService.createServer1(1, "test")
-        println("run test2")
-        return test
-    }
-
-    @GetMapping(value = ["/test3"])
-    @ResponseBody
-    fun test3(): Any {
-        println("run test1")
-        val test = openStackNetworkService.createServer2(2, "test")
-        println("run test2")
-        return test
-    }
-
     /**
      * IP 정보 bulk 업로드
      * @param List<AddressInfoData>: IP 정보 리스트

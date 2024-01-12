@@ -12,6 +12,5 @@ interface AddressService {
     fun deleteAddressInfo(ipAddress: String)
     fun getAddressInfo(type : String) :List<AddressInfoResponse>
     fun searchAddressInfo(keyword : String, value : String) : List<AddressInfoData>
-
     fun getRemainedAddress() : List<IpAddressData.IpAddressWithFloor>
 }

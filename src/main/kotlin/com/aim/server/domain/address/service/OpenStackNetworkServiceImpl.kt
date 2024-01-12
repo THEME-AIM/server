@@ -33,6 +33,9 @@ class OpenStackNetworkServiceImpl(
     @Value("\${openstack.keystone.domain}")
     private lateinit var domain: String
 
+    @Value("\${openstack.neutron.router.id}")
+    private lateinit var routerId: String
+    
     fun osAuthToken(): OSClientV3 {
         try {
             OSFactory.enableHttpLoggingFilter(true)
@@ -48,24 +51,20 @@ class OpenStackNetworkServiceImpl(
         throw Exception("AuthenticationException")
     }
 
-    @Value("\${openstack.neutron.router.id}")
-    private lateinit var routerId: String
-
-
+    // TODO: startIp, endIp, cidr 이 세개를 모두 받아 네트워크와 서브넷 생성하게 수정 필요
+    // TODO: 할당 시작할 경우 프로젝트 생성? 엔드 포인트 개발 필요함.
+    // TODO: 만약, 비할당 할 경우에는 프로젝트 삭제 필요함.
+    // 기술 자체가 네트워크 기반의 프로젝트 생성은 아닌데, 굳이 프로젝트를 생성해야하나??
     override fun createNetwork(networkName: String, ipAddress: String): Network {
 //        ipAddressRepository.findByIpAddress(ipAddress).ifPresent {
 //            throw IllegalArgumentException("이미 사용중인 IP 주소입니다.")
 //        }
-        println("test networkName: $networkName")
-        println(osAuthToken())
-        println(osAuthToken().networking().network().list())
         val network = osAuthToken().networking().network().create(
             Builders.network()
                 .name(networkName)
                 .adminStateUp(true)
                 .build()
         )
-        println("test network: $network")
         createSubnet(network, networkName + "_subnet", ipAddress)
         return network
     }
@@ -85,16 +84,18 @@ class OpenStackNetworkServiceImpl(
     private fun createSubnet(
         network: Network,
         subnetName: String,
-        ipPool: String
+        startIp: String,
+        endIp: String,
+        cidr: String
     ): Subnet {
         val subnet = osAuthToken().networking().subnet().create(
             Builders.subnet()
                 .name(subnetName)
                 .networkId(network.id)
                 .enableDHCP(true)
-                .addPool("$ipPool.2", "$ipPool.254")
+                .addPool(startIp, endIp)
                 .ipVersion(IPVersionType.V4)
-                .cidr("$ipPool.0/24")
+                .cidr(cidr)
                 .build()
         )
         osAuthToken().networking().router().attachInterface(routerId, AttachInterfaceType.SUBNET, subnet.id)
