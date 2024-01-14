@@ -15,4 +15,5 @@ interface AddressInfoQueryRepository {
     fun checkDuplicateMacAddress(macAddress: String): Optional<AddressInfo>
     fun setAttributeEmpty(tmpList: List<String>)
     fun updateAddressInfo(addressInfoData: AddressInfoData)
+    fun updateAddressInfoV2(id: Long, addressInfoData: AddressInfoData)
 }
