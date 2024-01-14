@@ -16,4 +16,5 @@ interface OpenStackNetworkService {
     fun getNetworkList(): List<Network>
     fun createIpInstance(department: String, name: String, ipAddress: String): String
     fun deleteIpInstance(serverId: String)
+    fun updateIpInstance(serverId: String, newIpAddress: String)
 }

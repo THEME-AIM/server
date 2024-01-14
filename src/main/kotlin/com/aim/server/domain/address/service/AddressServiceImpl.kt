@@ -29,6 +29,7 @@ class AddressServiceImpl(
                 if (!addressInfoRepository.checkDuplicateMacAddress(it.macAddress).isEmpty) {
                     throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
                 }
+                updateAddressInfo(it, it.ipAddress)
                 addressInfoRepository.updateAddressInfo(it)
             } else {
                 this.insertAddressInfo(it)
@@ -54,6 +55,14 @@ class AddressServiceImpl(
     }
 
     override fun updateAddressInfo(addressInfo: AddressInfoData, ipAddress: String) {
+
+        addressInfoRepository.findByIpAddress(listOf(ipAddress)).forEach {
+            if (!addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress).isEmpty) {
+                throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
+            }
+            openStackNetworkService.updateIpInstance(it.serverId!!, addressInfo.ipAddress)
+        }
+
         addressInfoRepository.save(addressInfoRepository.findByIpAddress(listOf(ipAddress))[0].apply {
             this.macAddress = addressInfo.macAddress
             this.department = addressInfo.department
