@@ -119,12 +119,12 @@ class OpenStackNetworkServiceImpl(
         return osAuthToken().networking().subnet().list()
     }
 
-    override fun createIpInstance(ipAddress: String): String {
+    override fun createIpInstance(department: String, name: String, ipAddress: String): String {
         val imageId =
             adminConfigRepository.findByKey(OPENSTACK_IMAGE_NAME_KEY).getOrElse { throw Exception("Image not found") }
         val networkId = adminConfigRepository.findByKey(OPENSTACK_NETWORK_NAME_KEY)
             .getOrElse { throw Exception("Network not found") }
-        val serverName = "server-$ipAddress"
+        val serverName = department + "_" + name
         val createServer = Builders.server()
             .name(serverName)
             .flavor(1.toString())
