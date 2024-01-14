@@ -5,11 +5,13 @@ import com.aim.server.core.exception.ErrorCode
 import com.aim.server.domain.address.dto.IpAddressData
 import com.aim.server.domain.address.repository.ipAddress.IpAddressBatchRepository
 import com.aim.server.domain.address.repository.ipAddress.IpAddressRepository
+import com.aim.server.domain.address.service.OpenStackNetworkService
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_PASSWORD_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_USERNAME_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_PASSWORD_VALUE
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DEFAULT_ADMIN_USERNAME_VALUE
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.FLOOR_PREFIX
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.OPENSTACK_NETWORK_NAME_KEY
 import com.aim.server.domain.admin.dto.AdminConfigData.*
 import com.aim.server.domain.admin.entity.AdminConfig
 import com.aim.server.domain.admin.repository.AdminConfigRepository
@@ -27,6 +29,7 @@ class AdminConfigServiceImpl(
     private val ipAddressRepository: IpAddressRepository,
     private val ipAddressBatchRepository: IpAddressBatchRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val openStackNetworkService: OpenStackNetworkService
 ) : AdminConfigService {
     private val log = KotlinLogging.logger { }
 
@@ -89,6 +92,7 @@ class AdminConfigServiceImpl(
     @Transactional
     override fun upsertAdminConfigs(configs: List<AdminKeys>): List<APIResponse> = configs.run {
         val findConfigs = adminConfigRepository.findByKeyIn(this.map(AdminKeys::key))
+
         return this.map {
             findConfigs.find { findConfig -> findConfig.key == it.key }?.apply {
                 this.value = convertValue(it.key, it.value)
@@ -109,7 +113,6 @@ class AdminConfigServiceImpl(
         val usedIpAddresses = mutableSetOf<String>()
         configs.forEach {
             val ipAddresses = FloorKeys.betweenIpAddress(it.startIpAddress, it.endIpAddress)
-            // TODO: IP 기반으로 openStackService를 사용해 Network와 Subnet 생성
             ipAddressRepository.updateIpAddressFloor(
                 it.floor,
                 findIpAddressWithFloor.filter { ipAddress ->
@@ -133,6 +136,21 @@ class AdminConfigServiceImpl(
             ipAddressRepository.deleteByIpAddresses(deleteIpAddresses.toList())
         }
         return upsertAdminConfigs(configs.toAdminKeys())
+    }
+
+    override fun createIpAddressConfig(config: IpAddressRequest): List<APIResponse> {
+        val createdNetwork = openStackNetworkService.createNetwork(
+            "main_network_server",
+            config.startIpAddress,
+            config.endIpAddress,
+            config.gateway,
+            config.cidr
+        )
+        val keys = config.toKeys() + AdminKeys(
+            key = OPENSTACK_NETWORK_NAME_KEY,
+            value = createdNetwork.id
+        )
+        return upsertAdminConfigs(keys)
     }
 
     /**

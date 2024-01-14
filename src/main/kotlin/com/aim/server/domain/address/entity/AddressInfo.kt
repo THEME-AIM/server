@@ -1,7 +1,6 @@
 package com.aim.server.domain.address.entity
 
 import com.aim.server.domain.address.dto.AddressInfoData
-import com.aim.server.domain.admin.dto.AdminConfigData
 import jakarta.persistence.*
 
 @Entity
@@ -28,6 +27,9 @@ data class AddressInfo(
 
     @Column(name = "name", nullable = true)
     var name: String,
+
+    @Column(name = "server_id", nullable = true)
+    var serverId: String? = null,
 
     @Column(name = "department", nullable = true)
     var department: String,

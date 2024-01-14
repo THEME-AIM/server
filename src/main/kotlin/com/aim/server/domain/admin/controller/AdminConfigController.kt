@@ -99,6 +99,17 @@ class AdminConfigController(
         return SuccessResponse.of(adminConfigService.upsertAdminConfigs(configs.keys))
     }
 
+    /**
+     * 초기 IP 관리 데이터 설정
+     */
+    @PatchMapping(value = ["/ip"])
+    @ResponseStatus(value = HttpStatus.OK)
+    fun createIpConfig(
+        @RequestBody ipAddressRequest: IpAddressRequest
+    ): BaseResponse<List<APIResponse>> {
+        return SuccessResponse.of(adminConfigService.createIpAddressConfig(ipAddressRequest))
+    }
+
     @PostMapping(value = ["/floor"])
     @ResponseStatus(value = HttpStatus.OK)
     fun upsertFloors(

@@ -2,6 +2,11 @@ package com.aim.server.domain.admin.dto
 
 import com.aim.server.domain.admin.annotation.AdminKey
 import com.aim.server.domain.admin.annotation.IPv4
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.DNS_ADDRESS_KEY
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.END_IP_ADDRESS_KEY
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.GATEWAY_IP_ADDRESS_KEY
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.START_IP_ADDRESS_KEY
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.SUBNET_MASK_KEY
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
@@ -13,6 +18,24 @@ class AdminConfigData {
         val key: String,
         val value: String
     )
+
+    data class IpAddressRequest(
+        val gateway: String,
+        val dns: String,
+        val startIpAddress: String,
+        val endIpAddress: String,
+        val cidr: String,
+    ) {
+        fun toKeys(): List<AdminKeys> {
+            return listOf(
+                AdminKeys(key = GATEWAY_IP_ADDRESS_KEY, value = gateway),
+                AdminKeys(key = DNS_ADDRESS_KEY, value = dns),
+                AdminKeys(key = START_IP_ADDRESS_KEY, value = startIpAddress),
+                AdminKeys(key = END_IP_ADDRESS_KEY, value = endIpAddress),
+                AdminKeys(key = SUBNET_MASK_KEY, value = cidr),
+            )
+        }
+    }
 
     data class KeyAPIRequest(
         @field: NotEmpty
@@ -69,7 +92,7 @@ class AdminConfigData {
     data class SignInRequest(
         @field: NotBlank
         val username: String,
-        
+
         @field: NotBlank
         val password: String
     )

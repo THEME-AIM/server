@@ -9,4 +9,5 @@ interface AdminConfigService {
     fun signIn(signIn: SignInRequest, errors: Errors)
     fun upsertAdminConfigs(configs: List<AdminKeys>): List<APIResponse>
     fun upsertFloorConfigs(configs: List<FloorKeys>): List<APIResponse>
+    fun createIpAddressConfig(config: IpAddressRequest): List<APIResponse>
 }

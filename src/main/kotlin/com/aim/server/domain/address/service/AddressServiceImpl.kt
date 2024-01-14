@@ -8,8 +8,6 @@ import com.aim.server.domain.address.dto.IpAddressData
 import com.aim.server.domain.address.entity.IpAddress
 import com.aim.server.domain.address.repository.addressInfo.AddressInfoRepository
 import com.aim.server.domain.address.repository.ipAddress.IpAddressRepository
-import com.aim.server.domain.admin.repository.AdminConfigRepository
-import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -18,7 +16,7 @@ import java.util.*
 class AddressServiceImpl(
     private val addressInfoRepository: AddressInfoRepository,
     private val ipAddressRepository: IpAddressRepository,
-    private val adminConfigRepository: AdminConfigRepository
+    private val openStackNetworkService: OpenStackNetworkService
 ) : AddressService {
 
     @Transactional
@@ -28,7 +26,7 @@ class AddressServiceImpl(
         addressInfoRepository.setAttributeEmpty(tmpList)
         addressInfo.forEach {
             if (tmpList.contains(it.ipAddress)) {
-                if(!addressInfoRepository.checkDuplicateMacAddress(it.macAddress).isEmpty) {
+                if (!addressInfoRepository.checkDuplicateMacAddress(it.macAddress).isEmpty) {
                     throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
                 }
                 addressInfoRepository.updateAddressInfo(it)
@@ -40,9 +38,7 @@ class AddressServiceImpl(
 
     @Transactional
     override fun insertAddressInfo(addressInfo: AddressInfoData) {
-
         val ipAddress: Optional<IpAddress> = ipAddressRepository.findByIpAddress(addressInfo.ipAddress)
-
         if (ipAddress.isEmpty) {
             throw BaseException(ErrorCode.IP_ADDRESS_NOT_FOUND)
         } else if (ipAddress.get().isAssigned) {
@@ -53,8 +49,8 @@ class AddressServiceImpl(
         if (!addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress).isEmpty) {
             throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
         }
-
-        addressInfoRepository.save(addressInfo.toEntity(ipAddress = ipAddress.get()))
+        val instance = openStackNetworkService.createIpInstance(addressInfo.ipAddress)
+        addressInfoRepository.save(addressInfo.toEntity(ipAddress = ipAddress.get()).apply { this.serverId = instance })
     }
 
     override fun updateAddressInfo(addressInfo: AddressInfoData, ipAddress: String) {
@@ -69,7 +65,11 @@ class AddressServiceImpl(
 
     @Transactional
     override fun deleteAddressInfo(ipAddress: String) {
-        addressInfoRepository.deleteByIpAddress(ipAddress)
+        addressInfoRepository.findByIpAddress(listOf(ipAddress))
+            .forEach {
+                openStackNetworkService.deleteIpInstance(it.serverId!!)
+                addressInfoRepository.delete(it)
+            }
         ipAddressRepository.updateIpAddress(ipAddress, false)
     }
 
@@ -86,12 +86,14 @@ class AddressServiceImpl(
                     AddressInfoResponse(floor, addresses.toMutableList())
                 }
             }
+
             "dept" -> {
                 val groupedByDept = allAddressList.groupBy { it.department }
                 groupedByDept.map { (dept, addresses) ->
                     AddressInfoResponse(dept, addresses.toMutableList())
                 }
             }
+
             else -> throw BaseException(ErrorCode.INVALID_INPUT_VALUE)
         }
     }
@@ -107,7 +109,7 @@ class AddressServiceImpl(
 
 
     override fun getRemainedAddress(): List<IpAddressData.IpAddressWithFloor> {
-        val allUnusedAddressList : List<IpAddressData.IpAddressWithFloor> = ipAddressRepository.findByUnusedIp().map{
+        val allUnusedAddressList: List<IpAddressData.IpAddressWithFloor> = ipAddressRepository.findByUnusedIp().map {
             it.toDto()
         }
         return allUnusedAddressList
