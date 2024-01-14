@@ -49,7 +49,7 @@ class AddressServiceImpl(
         if (!addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress).isEmpty) {
             throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
         }
-        val instance = openStackNetworkService.createIpInstance(addressInfo.ipAddress)
+        val instance = openStackNetworkService.createIpInstance(addressInfo.department, addressInfo.name, addressInfo.ipAddress)
         addressInfoRepository.save(addressInfo.toEntity(ipAddress = ipAddress.get()).apply { this.serverId = instance })
     }
 

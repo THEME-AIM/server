@@ -97,45 +97,45 @@ tasks.bootBuildImage {
 
 // Rest Docs Setting
 
-tasks {
-    val snippetsDir = file("build/generated-snippets")
-
-    test {
-        outputs.dir(snippetsDir)
-        useJUnitPlatform()
-    }
-
-    asciidoctor {
-        dependsOn(test)
-        configurations(asciidoctorExt.name)
-        inputs.dir(snippetsDir)
-
-        sources {
-            include("**/*.adoc", "**/common/*.adoc")
-        }
-
-        baseDirFollowsSourceFile()
-
-        doFirst {
-            delete("src/main/resources/static/docs")
-        }
-    }
-
-    register<Copy>("copyDocument") {
-        dependsOn(asciidoctor)
-
-        destinationDir = file("src/main/resources/static")
-
-        from("build/docs/asciidoc") {
-            this.into("docs")
-        }
-    }
-
-    build {
-        dependsOn("copyDocument")
-    }
-
-    bootJar {
-        dependsOn(asciidoctor)
-    }
-}
+//tasks {
+//    val snippetsDir = file("build/generated-snippets")
+//
+//    test {
+//        outputs.dir(snippetsDir)
+//        useJUnitPlatform()
+//    }
+//
+//    asciidoctor {
+//        dependsOn(test)
+//        configurations(asciidoctorExt.name)
+//        inputs.dir(snippetsDir)
+//
+//        sources {
+//            include("**/*.adoc", "**/common/*.adoc")
+//        }
+//
+//        baseDirFollowsSourceFile()
+//
+//        doFirst {
+//            delete("src/main/resources/static/docs")
+//        }
+//    }
+//
+//    register<Copy>("copyDocument") {
+//        dependsOn(asciidoctor)
+//
+//        destinationDir = file("src/main/resources/static")
+//
+//        from("build/docs/asciidoc") {
+//            this.into("docs")
+//        }
+//    }
+//
+//    build {
+//        dependsOn("copyDocument")
+//    }
+//
+//    bootJar {
+//        dependsOn(asciidoctor)
+//    }
+//}
