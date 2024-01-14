@@ -11,9 +11,11 @@ import org.openstack4j.model.common.Identifier
 import org.openstack4j.model.compute.BDMDestType
 import org.openstack4j.model.compute.BDMSourceType
 import org.openstack4j.model.network.AttachInterfaceType
+import org.openstack4j.model.network.IP
 import org.openstack4j.model.network.IPVersionType
 import org.openstack4j.model.network.Network
 import org.openstack4j.model.network.Subnet
+import org.openstack4j.model.network.options.PortListOptions
 import org.openstack4j.openstack.OSFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -143,5 +145,16 @@ class OpenStackNetworkServiceImpl(
 
     override fun deleteIpInstance(serverId: String) {
         osAuthToken().compute().servers().delete(serverId)
+    }
+
+    override fun updateIpInstance(serverId: String, newIpAddress: String) {
+        val server = osAuthToken().compute().servers().get(serverId)
+        val ports = osAuthToken().networking().port().list(PortListOptions.create().deviceId(serverId))
+        val port = ports.firstOrNull()
+        log.info { "port: $port" }
+        if (port != null) {
+            val fixedIps = port.fixedIps.toMutableList()
+            val newFixedIp = mapOf("subnet_id" to port.fixedIps.first().subnetId, "ip_address" to newIpAddress)
+        }
     }
 }
