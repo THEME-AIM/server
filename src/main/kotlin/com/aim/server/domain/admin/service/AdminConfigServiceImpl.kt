@@ -3,6 +3,7 @@ package com.aim.server.domain.admin.service
 import com.aim.server.core.exception.BaseException
 import com.aim.server.core.exception.ErrorCode
 import com.aim.server.domain.address.dto.IpAddressData
+import com.aim.server.domain.address.repository.addressInfo.AddressInfoRepository
 import com.aim.server.domain.address.repository.ipAddress.IpAddressBatchRepository
 import com.aim.server.domain.address.repository.ipAddress.IpAddressRepository
 import com.aim.server.domain.address.service.OpenStackNetworkService
@@ -29,6 +30,7 @@ class AdminConfigServiceImpl(
     private val ipAddressRepository: IpAddressRepository,
     private val ipAddressBatchRepository: IpAddressBatchRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val addressInfoRepository: AddressInfoRepository,
     private val openStackNetworkService: OpenStackNetworkService
 ) : AdminConfigService {
     private val log = KotlinLogging.logger { }
@@ -92,7 +94,6 @@ class AdminConfigServiceImpl(
     @Transactional
     override fun upsertAdminConfigs(configs: List<AdminKeys>): List<APIResponse> = configs.run {
         val findConfigs = adminConfigRepository.findByKeyIn(this.map(AdminKeys::key))
-
         return this.map {
             findConfigs.find { findConfig -> findConfig.key == it.key }?.apply {
                 this.value = convertValue(it.key, it.value)
@@ -133,6 +134,9 @@ class AdminConfigServiceImpl(
         }
         val deleteIpAddresses = findIpAddresses.subtract(usedIpAddresses)
         if (deleteIpAddresses.isNotEmpty()) {
+            deleteIpAddresses.forEach {
+                addressInfoRepository.deleteByIpAddress(it)
+            }
             ipAddressRepository.deleteByIpAddresses(deleteIpAddresses.toList())
         }
         return upsertAdminConfigs(configs.toAdminKeys())
