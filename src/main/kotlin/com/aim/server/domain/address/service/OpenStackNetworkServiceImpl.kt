@@ -157,6 +157,8 @@ class OpenStackNetworkServiceImpl(
         val subnetId = subnet.id
         port.toBuilder().removeFixedIp(beforIp, subnetId).fixedIp(newIpAddress, subnetId).build()
 
+        osAuthToken().networking().port().update(port)
+
         // 이름 변경 로직
 //        osAuthToken().compute().servers().update(serverId, ServerUpdateOptions().name("시밸럼"))
     }
