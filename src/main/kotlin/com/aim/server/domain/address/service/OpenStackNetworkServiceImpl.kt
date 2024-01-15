@@ -157,6 +157,6 @@ class OpenStackNetworkServiceImpl(
 //        ports.remove(port)
 //        port.toBuilder().fixedIp(newIpAddress, subnetId).build()
 //        log.info { "newPort: $port" }
-        osAuthToken().compute().servers().update(serverId, ServerUpdateOptions().accessIPv4(newIpAddress))
+        osAuthToken().compute().servers().update(serverId, ServerUpdateOptions().name("시밸럼"))
     }
 }
