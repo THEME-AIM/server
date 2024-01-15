@@ -153,14 +153,9 @@ class OpenStackNetworkServiceImpl(
         log.info { "port: $port" }
         log.info { "ports: $ports" }
         val subnet = getSubnetList().first { it.id == port.fixedIps.first().subnetId }
+        val beforIp = port.fixedIps.first().ipAddress
         val subnetId = subnet.id
-        port.toBuilder().fixedIp(newIpAddress, subnetId).build()
-        log.info { "newPort: $port" }
-
-        osAuthToken().networking().port().update(port)
-        log.info { "newPort: $port" }
-        val ports2 = osAuthToken().networking().port().list(PortListOptions.create().deviceId(serverId))
-        log.info { "ports2: $ports2" }
+        port.toBuilder().removeFixedIp(beforIp, subnetId).fixedIp(newIpAddress, subnetId).build()
 
         // 이름 변경 로직
 //        osAuthToken().compute().servers().update(serverId, ServerUpdateOptions().name("시밸럼"))
