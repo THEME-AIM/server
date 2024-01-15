@@ -57,11 +57,6 @@ class AddressServiceImpl(
     @Transactional
     override fun updateAddressInfo(addressInfo: AddressInfoData, ipAddress: String) {
 
-        // macAddress 중복 체크
-        if (!addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress).isEmpty) {
-            throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
-        }
-
         // ip_address 테이블에 변경하고자 하는 ip가 있는지 확인
         val status: IpAddress = ipAddressRepository.findByIpAddress(addressInfo.ipAddress).orElseThrow {
             throw BaseException(ErrorCode.IP_ADDRESS_NOT_FOUND)
@@ -84,7 +79,6 @@ class AddressServiceImpl(
             .forEach {
                 openStackNetworkService.updateIpInstance(it.serverId!!, addressInfo.ipAddress)
             }
-
     }
 
     @Transactional
