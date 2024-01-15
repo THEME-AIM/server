@@ -149,6 +149,8 @@ class OpenStackNetworkServiceImpl(
     override fun updateIpInstance(serverId: String, newIpAddress: String) {
         val ports = osAuthToken().networking().port().list(PortListOptions.create().deviceId(serverId))
         val port = ports.first()
+        log.info { "port: $port" }
+        log.info { "ports: $ports" }
         val subnet = getSubnetList().first { it.id == port.fixedIps.first().subnetId }
         val subnetId = subnet.id
         val networkId = subnet.networkId
