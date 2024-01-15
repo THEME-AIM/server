@@ -14,6 +14,7 @@ class ConfigConsts {
         const val OPENSTACK_NETWORK_NAME_KEY = ADMIN_CONFIG_PREFIX + "openstack_network"
         const val OPENSTACK_IMAGE_NAME_KEY = ADMIN_CONFIG_PREFIX + "openstack_image"
         const val FLOOR_PREFIX = ADMIN_CONFIG_PREFIX + "floor_"
+        const val ADMIN_FLOOR_KEY = ADMIN_CONFIG_PREFIX + "floor"
         const val DEFAULT_ADMIN_USERNAME_VALUE = "admin"
         const val DEFAULT_ADMIN_PASSWORD_VALUE = "password123!"
     }

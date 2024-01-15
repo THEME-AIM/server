@@ -2,6 +2,7 @@ package com.aim.server.domain.admin.dto
 
 import com.aim.server.domain.admin.annotation.AdminKey
 import com.aim.server.domain.admin.annotation.IPv4
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.ADMIN_FLOOR_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DNS_ADDRESS_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.END_IP_ADDRESS_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.GATEWAY_IP_ADDRESS_KEY
@@ -20,19 +21,21 @@ class AdminConfigData {
     )
 
     data class IpAddressRequest(
-        val gateway: String,
-        val dns: String,
-        val startIpAddress: String,
-        val endIpAddress: String,
-        val cidr: String,
+        val admin_gateway_ip_address: String,
+        val admin_dns_address: String,
+        val admin_start_ip_address: String,
+        val admin_end_ip_address: String,
+        val admin_subnet_mask_key: String,
+        val admin_floor: String,
     ) {
         fun toKeys(): List<AdminKeys> {
             return listOf(
-                AdminKeys(key = GATEWAY_IP_ADDRESS_KEY, value = gateway),
-                AdminKeys(key = DNS_ADDRESS_KEY, value = dns),
-                AdminKeys(key = START_IP_ADDRESS_KEY, value = startIpAddress),
-                AdminKeys(key = END_IP_ADDRESS_KEY, value = endIpAddress),
-                AdminKeys(key = SUBNET_MASK_KEY, value = cidr),
+                AdminKeys(key = GATEWAY_IP_ADDRESS_KEY, value = admin_gateway_ip_address),
+                AdminKeys(key = DNS_ADDRESS_KEY, value = admin_dns_address),
+                AdminKeys(key = START_IP_ADDRESS_KEY, value = admin_start_ip_address),
+                AdminKeys(key = END_IP_ADDRESS_KEY, value = admin_end_ip_address),
+                AdminKeys(key = SUBNET_MASK_KEY, value = admin_subnet_mask_key),
+                AdminKeys(key = ADMIN_FLOOR_KEY, value = admin_floor),
             )
         }
     }
