@@ -11,7 +11,6 @@ import org.openstack4j.model.common.Identifier
 import org.openstack4j.model.compute.BDMDestType
 import org.openstack4j.model.compute.BDMSourceType
 import org.openstack4j.model.network.AttachInterfaceType
-import org.openstack4j.model.network.IP
 import org.openstack4j.model.network.IPVersionType
 import org.openstack4j.model.network.Network
 import org.openstack4j.model.network.Subnet
@@ -148,13 +147,15 @@ class OpenStackNetworkServiceImpl(
     }
 
     override fun updateIpInstance(serverId: String, newIpAddress: String) {
-        val server = osAuthToken().compute().servers().get(serverId)
         val ports = osAuthToken().networking().port().list(PortListOptions.create().deviceId(serverId))
-        val port = ports.firstOrNull()
-        log.info { "port: $port" }
-        if (port != null) {
-            val fixedIps = port.fixedIps.toMutableList()
-            val newFixedIp = mapOf("subnet_id" to port.fixedIps.first().subnetId, "ip_address" to newIpAddress)
-        }
+        val port = ports.first()
+        val subnet = getSubnetList().first { it.id == port.fixedIps.first().subnetId }
+        val subnetId = subnet.id
+        val networkId = subnet.networkId
+        val newPort = Builders.port()
+            .networkId(networkId)
+            .fixedIp(newIpAddress, subnetId)
+            .build()
+        osAuthToken().networking().port().update(newPort)
     }
 }

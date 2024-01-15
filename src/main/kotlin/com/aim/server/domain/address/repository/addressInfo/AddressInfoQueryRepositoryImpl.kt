@@ -56,6 +56,18 @@ class AddressInfoQueryRepositoryImpl(
             .execute()
     }
 
+    override fun updateAddressInfoV2(id: Long, addressInfoData: AddressInfoData) {
+        queryFactory
+            .update(addressInfo)
+            .set(addressInfo.macAddress, addressInfoData.macAddress)
+            .set(addressInfo.department, addressInfoData.department)
+            .set(addressInfo.name, addressInfoData.name)
+            .set(addressInfo.isComputer, addressInfoData.isComputer)
+            .set(addressInfo.ipAddress.ipAddress, addressInfoData.ipAddress)
+            .where(addressInfo.id.eq(id))
+            .execute()
+    }
+
     override fun getFloorList(): List<Int> {
         return queryFactory
             .select(addressInfo.ipAddress.floor).distinct()
