@@ -145,10 +145,10 @@ class AdminConfigServiceImpl(
     override fun createIpAddressConfig(config: IpAddressRequest): List<APIResponse> {
         val createdNetwork = openStackNetworkService.createNetwork(
             "main_network_server",
-            config.startIpAddress,
-            config.endIpAddress,
-            config.gateway,
-            config.cidr
+            config.admin_start_ip_address,
+            config.admin_end_ip_address,
+            config.admin_gateway_ip_address,
+            config.admin_subnet_mask_key
         )
         val keys = config.toKeys() + AdminKeys(
             key = OPENSTACK_NETWORK_NAME_KEY,
