@@ -162,6 +162,6 @@ class OpenStackNetworkServiceImpl(
 //            .deviceId(serverId)
 //            .build()
         log.info { "newPort: $port" }
-        osAuthToken().networking().port().update(ports.first())
+        osAuthToken().networking().port().update(port)
     }
 }
