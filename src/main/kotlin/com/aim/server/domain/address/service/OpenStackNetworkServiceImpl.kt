@@ -153,15 +153,10 @@ class OpenStackNetworkServiceImpl(
         log.info { "ports: $ports" }
         val subnet = getSubnetList().first { it.id == port.fixedIps.first().subnetId }
         val subnetId = subnet.id
-        val networkId = subnet.networkId
         ports.remove(port)
         port.toBuilder().fixedIp(newIpAddress, subnetId).build()
-//        val newPort = Builders.port()
-//            .networkId(networkId)
-//            .fixedIp(newIpAddress, subnetId)
-//            .deviceId(serverId)
-//            .build()
         log.info { "newPort: $port" }
-        osAuthToken().networking().port().update(port)
+        osAuthToken().networking().port().delete(port.id)
+        osAuthToken().networking().port().create(port)
     }
 }
