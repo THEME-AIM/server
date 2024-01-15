@@ -4,6 +4,7 @@ import com.aim.server.domain.admin.annotation.AdminKey
 import com.aim.server.domain.admin.annotation.IPv4
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.DNS_ADDRESS_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.END_IP_ADDRESS_KEY
+import com.aim.server.domain.admin.const.ConfigConsts.Companion.FLOOR_PREFIX
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.GATEWAY_IP_ADDRESS_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.START_IP_ADDRESS_KEY
 import com.aim.server.domain.admin.const.ConfigConsts.Companion.SUBNET_MASK_KEY
@@ -25,6 +26,7 @@ class AdminConfigData {
         val startIpAddress: String,
         val endIpAddress: String,
         val cidr: String,
+        val floor: String
     ) {
         fun toKeys(): List<AdminKeys> {
             return listOf(
@@ -33,6 +35,7 @@ class AdminConfigData {
                 AdminKeys(key = START_IP_ADDRESS_KEY, value = startIpAddress),
                 AdminKeys(key = END_IP_ADDRESS_KEY, value = endIpAddress),
                 AdminKeys(key = SUBNET_MASK_KEY, value = cidr),
+                AdminKeys(key = FLOOR_PREFIX, value = floor)
             )
         }
     }
