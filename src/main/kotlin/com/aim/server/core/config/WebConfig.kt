@@ -1,6 +1,6 @@
 package com.aim.server.core.config
 
-import com.aim.server.core.interceptor.AuthenticatedInterceptor
+//import com.aim.server.core.interceptor.AuthenticatedInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
@@ -15,8 +15,8 @@ class WebConfig : WebMvcConfigurer {
             .allowedMethods("GET", "POST", "DELETE", "PATCH", "PUT")
     }
 
-    override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(AuthenticatedInterceptor())
-            .addPathPatterns("/api/**")
-    }
+//    override fun addInterceptors(registry: InterceptorRegistry) {
+//        registry.addInterceptor(AuthenticatedInterceptor())
+//            .addPathPatterns("/api/**")
+//    }
 }
