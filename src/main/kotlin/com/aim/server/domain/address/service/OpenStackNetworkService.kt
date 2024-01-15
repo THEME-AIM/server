@@ -14,6 +14,7 @@ interface OpenStackNetworkService {
     fun deleteNetwork(networkName: String)
     fun getNetork(networkName: String): Network
     fun getNetworkList(): List<Network>
-    fun createIpInstance(ipAddress: String): String
+    fun createIpInstance(department: String, name: String, ipAddress: String): String
     fun deleteIpInstance(serverId: String)
+    fun updateIpInstance(serverId: String, newIpAddress: String)
 }

@@ -10,10 +10,12 @@ import org.openstack4j.api.exceptions.AuthenticationException
 import org.openstack4j.model.common.Identifier
 import org.openstack4j.model.compute.BDMDestType
 import org.openstack4j.model.compute.BDMSourceType
+import org.openstack4j.model.compute.ServerUpdateOptions
 import org.openstack4j.model.network.AttachInterfaceType
 import org.openstack4j.model.network.IPVersionType
 import org.openstack4j.model.network.Network
 import org.openstack4j.model.network.Subnet
+import org.openstack4j.model.network.options.PortListOptions
 import org.openstack4j.openstack.OSFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -119,12 +121,12 @@ class OpenStackNetworkServiceImpl(
         return osAuthToken().networking().subnet().list()
     }
 
-    override fun createIpInstance(ipAddress: String): String {
+    override fun createIpInstance(department: String, name: String, ipAddress: String): String {
         val imageId =
             adminConfigRepository.findByKey(OPENSTACK_IMAGE_NAME_KEY).getOrElse { throw Exception("Image not found") }
         val networkId = adminConfigRepository.findByKey(OPENSTACK_NETWORK_NAME_KEY)
             .getOrElse { throw Exception("Network not found") }
-        val serverName = "server-$ipAddress"
+        val serverName = department + "_" + name
         val createServer = Builders.server()
             .name(serverName)
             .flavor(1.toString())
@@ -143,5 +145,21 @@ class OpenStackNetworkServiceImpl(
 
     override fun deleteIpInstance(serverId: String) {
         osAuthToken().compute().servers().delete(serverId)
+    }
+
+    override fun updateIpInstance(serverId: String, newIpAddress: String) {
+        val ports = osAuthToken().networking().port().list(PortListOptions.create().deviceId(serverId))
+        val port = ports.first()
+        log.info { "port: $port" }
+        log.info { "ports: $ports" }
+        val subnet = getSubnetList().first { it.id == port.fixedIps.first().subnetId }
+        val beforIp = port.fixedIps.first().ipAddress
+        val subnetId = subnet.id
+        port.toBuilder().removeFixedIp(beforIp, subnetId).fixedIp(newIpAddress, subnetId).build()
+
+        osAuthToken().networking().port().update(port)
+
+        // 이름 변경 로직
+//        osAuthToken().compute().servers().update(serverId, ServerUpdateOptions().name("시밸럼"))
     }
 }

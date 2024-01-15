@@ -49,18 +49,36 @@ class AddressServiceImpl(
         if (!addressInfoRepository.checkDuplicateMacAddress(addressInfo.macAddress).isEmpty) {
             throw BaseException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS)
         }
-        val instance = openStackNetworkService.createIpInstance(addressInfo.ipAddress)
+        val instance =
+            openStackNetworkService.createIpInstance(addressInfo.department, addressInfo.name, addressInfo.ipAddress)
         addressInfoRepository.save(addressInfo.toEntity(ipAddress = ipAddress.get()).apply { this.serverId = instance })
     }
 
+    @Transactional
     override fun updateAddressInfo(addressInfo: AddressInfoData, ipAddress: String) {
-        addressInfoRepository.save(addressInfoRepository.findByIpAddress(listOf(ipAddress))[0].apply {
-            this.macAddress = addressInfo.macAddress
-            this.department = addressInfo.department
-            this.ipAddress.floor = addressInfo.floor
-            this.name = addressInfo.name
-            this.isComputer = addressInfo.isComputer
-        })
+
+        // ip_address 테이블에 변경하고자 하는 ip가 있는지 확인
+        val status: IpAddress = ipAddressRepository.findByIpAddress(addressInfo.ipAddress).orElseThrow {
+            throw BaseException(ErrorCode.IP_ADDRESS_NOT_FOUND)
+        }
+
+
+        // ip_address 테이블에 변경하고자 하는 ip가 사용가능한가 확인
+        if (status.isAssigned) {
+            throw BaseException(ErrorCode.IP_ADDRESS_ALREADY_EXISTS)
+        }
+
+        ipAddressRepository.updateIpAddress(ipAddress, false)
+        ipAddressRepository.updateIpAddress(addressInfo.ipAddress, true)
+
+        addressInfoRepository.updateAddressInfoV2(
+            addressInfoRepository.findByIpAddress(listOf(ipAddress)).first().id,
+            addressInfo
+        )
+        addressInfoRepository.findByIpAddress(listOf(addressInfo.ipAddress))
+            .forEach {
+                openStackNetworkService.updateIpInstance(it.serverId!!, addressInfo.ipAddress)
+            }
     }
 
     @Transactional
