@@ -148,15 +148,19 @@ class OpenStackNetworkServiceImpl(
     }
 
     override fun updateIpInstance(serverId: String, newIpAddress: String) {
-//        val ports = osAuthToken().networking().port().list(PortListOptions.create().deviceId(serverId))
-//        val port = ports.first()
-//        log.info { "port: $port" }
-//        log.info { "ports: $ports" }
-//        val subnet = getSubnetList().first { it.id == port.fixedIps.first().subnetId }
-//        val subnetId = subnet.id
-//        ports.remove(port)
-//        port.toBuilder().fixedIp(newIpAddress, subnetId).build()
-//        log.info { "newPort: $port" }
-        osAuthToken().compute().servers().update(serverId, ServerUpdateOptions().name("시밸럼"))
+        val ports = osAuthToken().networking().port().list(PortListOptions.create().deviceId(serverId))
+        val port = ports.first()
+        log.info { "port: $port" }
+        log.info { "ports: $ports" }
+        val subnet = getSubnetList().first { it.id == port.fixedIps.first().subnetId }
+        val subnetId = subnet.id
+        port.toBuilder().fixedIp(newIpAddress, subnetId).build()
+        log.info { "newPort: $port" }
+
+        osAuthToken().networking().port().update(port)
+        log.info { "newPort: $port" }
+
+        // 이름 변경 로직
+//        osAuthToken().compute().servers().update(serverId, ServerUpdateOptions().name("시밸럼"))
     }
 }
