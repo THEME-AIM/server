@@ -157,6 +157,7 @@ class OpenStackNetworkServiceImpl(
         val newPort = Builders.port()
             .networkId(networkId)
             .fixedIp(newIpAddress, subnetId)
+            .deviceId(serverId)
             .build()
         osAuthToken().networking().port().update(newPort)
     }
