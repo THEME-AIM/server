@@ -159,6 +159,7 @@ class OpenStackNetworkServiceImpl(
             .fixedIp(newIpAddress, subnetId)
             .deviceId(serverId)
             .build()
+        log.info { "newPort: $newPort" }
         osAuthToken().networking().port().update(newPort)
     }
 }
