@@ -80,7 +80,7 @@ class AddressServiceImpl(
             addressInfoRepository.findByIpAddress(listOf(ipAddress)).first().id,
             addressInfo
         )
-        addressInfoRepository.findByIpAddress(listOf(ipAddress))
+        addressInfoRepository.findByIpAddress(listOf(addressInfo.ipAddress))
             .forEach {
                 openStackNetworkService.updateIpInstance(it.serverId!!, addressInfo.ipAddress)
             }
