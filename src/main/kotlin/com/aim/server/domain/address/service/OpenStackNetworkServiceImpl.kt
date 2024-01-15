@@ -159,6 +159,8 @@ class OpenStackNetworkServiceImpl(
 
         osAuthToken().networking().port().update(port)
         log.info { "newPort: $port" }
+        val ports2 = osAuthToken().networking().port().list(PortListOptions.create().deviceId(serverId))
+        log.info { "ports2: $ports2" }
 
         // 이름 변경 로직
 //        osAuthToken().compute().servers().update(serverId, ServerUpdateOptions().name("시밸럼"))
